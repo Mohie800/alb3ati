@@ -80,7 +80,7 @@ export default function Host({ navigation }) {
 			playerId: id,
 			roleId: role(),
 		});
-		alert(JSON.stringify(game.data));
+		if (game.data) alert("تم");
 	};
 
 	const saveToken = async (key, value) => {
@@ -89,6 +89,10 @@ export default function Host({ navigation }) {
 
 	const handleStartGame = async () => {
 		const myId = await SecureStore.getItemAsync("id");
+		if (player.started) {
+			alert("غير مسموح");
+			return;
+		}
 		saveToken("my_role", player.roleId);
 
 		navigation.navigate(`new`, {

@@ -11,6 +11,7 @@ import JoinedPlayer from "../../components/JoinedPlayer";
 import { useEffect, useState } from "react";
 import server from "../../api/server";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { StackActions } from "@react-navigation/native";
 
 const GamePage = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState(null);
@@ -19,13 +20,13 @@ const GamePage = ({ route, navigation }) => {
 	const [player, setPlayer] = useState({});
 	const [loading, setloading] = useState(true);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	const findPlayer = (arr) => {
 		return arr.filter((player) => {
@@ -49,10 +50,12 @@ const GamePage = ({ route, navigation }) => {
 			playerId: target,
 			myId: route.params.MyId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	useEffect(() => {

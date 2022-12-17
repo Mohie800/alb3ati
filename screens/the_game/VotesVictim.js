@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import server from "../../api/server";
 import JoinedPlayer from "../../components/JoinedPlayer";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 const VotesVictim = ({ route, navigation }) => {
 	const [votes, setvotes] = useState(null);
@@ -11,13 +12,13 @@ const VotesVictim = ({ route, navigation }) => {
 	const [alivePlayers, setAlivePlayers] = useState(null);
 	const [player, setPlayer] = useState(null);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	const getGame = async () => {
 		const myId = await SecureStore.getItemAsync("id");
@@ -31,6 +32,10 @@ const VotesVictim = ({ route, navigation }) => {
 		const findMe = findPlayer(data.players, myId);
 		setPlayer(findMe[0]);
 		// alert(JSON.stringify(data));
+		await server.post("/game/notready", {
+			gameId: route.params.roomId,
+			myId,
+		});
 	};
 
 	const findPlayer = (arr, myId) => {
@@ -63,10 +68,13 @@ const VotesVictim = ({ route, navigation }) => {
 
 	useEffect(() => {
 		if (votes) {
+			//شوف دي بتطلع شنو وشوف شوف طول الارى والباقي ساهل
 			const victim = calVotes(votes);
+			if (victim.length == 1) {
+				setvictim(victim);
+				fuck(victim[0]);
+			}
 			// alert(victim);
-			setvictim(victim);
-			fuck(victim[0]);
 		}
 	}, [votes]);
 
@@ -100,11 +108,11 @@ const VotesVictim = ({ route, navigation }) => {
 		} else if (hash.villager && !hash.ba3ati && !hash.jenzeer) {
 			return "فاز القرويون";
 		} else if (!hash.villager && hash.ba3ati && !hash.jenzeer) {
-			return "ba3ati_wins";
+			return "فاز البعايت";
 		} else if (!hash.villager && !hash.ba3ati && hash.jenzeer) {
-			return "jenzeer_Wins";
+			return "فاز أبو جنزير";
 		} else if (!hash.villager && !hash.ba3ati && !hash.jenzeer) {
-			return "no_win";
+			return "مات الجميع";
 		} else {
 			return "no_Win";
 		}
@@ -128,12 +136,16 @@ const VotesVictim = ({ route, navigation }) => {
 					gameId: route.params.roomId,
 					myId,
 				});
-				navigation.navigate("new", {
-					player: player,
-					roomId: route.params.roomId,
-				});
+				navigation.dispatch(
+					StackActions.replace("new", {
+						player: player,
+						roomId: route.params.roomId,
+					})
+				);
 			} else {
-				navigation.navigate("win", { joinedPlayers, win: res });
+				navigation.dispatch(
+					StackActions.replace("win", { joinedPlayers, win: res })
+				);
 			}
 			// alert(JSON.stringify(hashmap));
 		}
@@ -152,13 +164,23 @@ const VotesVictim = ({ route, navigation }) => {
 		});
 	};
 
+	const renderVotesEqual = () => {
+		return (
+			<View>
+				<Text style={styles.text}>تعادلت الأصوات</Text>
+			</View>
+		);
+	};
+
 	return (
 		<View>
 			<View style={styles.container}>
 				<View>
-					<Text style={styles.text}>قامت القرية بقتل :</Text>
+					{victim && (
+						<Text style={styles.text}>قامت القرية بقتل :</Text>
+					)}
 				</View>
-				<View>{victim && renderVictims()}</View>
+				<View>{victim ? renderVictims() : renderVotesEqual()}</View>
 				<View>
 					<TouchableOpacity
 						style={styles.loginBtn}

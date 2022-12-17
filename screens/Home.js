@@ -1,4 +1,5 @@
 import { Button, View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StackActions } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
 	return (
@@ -6,7 +7,9 @@ const Home = ({ navigation }) => {
 			<View style={styles.btn}>
 				<TouchableOpacity
 					style={styles.loginBtn}
-					onPress={() => navigation.navigate("host")}
+					onPress={() =>
+						navigation.dispatch(StackActions.replace("host"))
+					}
 				>
 					<Text style={styles.loginText}>استضف لعبة</Text>
 				</TouchableOpacity>
@@ -14,7 +17,9 @@ const Home = ({ navigation }) => {
 			<View style={styles.btn}>
 				<TouchableOpacity
 					style={styles.loginBtn}
-					onPress={() => navigation.navigate("looby")}
+					onPress={() =>
+						navigation.dispatch(StackActions.replace("looby"))
+					}
 				>
 					<Text style={styles.loginText}>الانضمام للعبة</Text>
 				</TouchableOpacity>

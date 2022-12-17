@@ -9,6 +9,7 @@ import {
 import server from "../../api/server";
 import JoinedPlayer from "../../components/JoinedPlayer";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 const Victims = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState(
@@ -19,13 +20,13 @@ const Victims = ({ route, navigation }) => {
 	const [jenVic, setJenVic] = useState([]);
 	const [noD, setnoD] = useState([]);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	// useEffect(() => alert(route.params), []);
 
@@ -35,6 +36,46 @@ const Victims = ({ route, navigation }) => {
 			.catch((e) => console.log(e));
 		setJoinedPlayers(data.players);
 		// console.log(data.players);
+	};
+
+	const inGamePlayers = (data) => {
+		return data.map((player) => {
+			if (player.inGame && player.roleId == 1) {
+				return "ba3ati";
+			} else if (player.inGame && player.roleId == 2) {
+				return "villager";
+			} else if (player.inGame && player.roleId == 3) {
+				return "villager";
+			} else if (player.inGame && player.roleId == 4) {
+				return "villager";
+			} else if (player.inGame && player.roleId == 5) {
+				return "jenzeer";
+			} else {
+				return;
+			}
+		});
+	};
+
+	const gameState = (hash) => {
+		if (hash.villager && hash.ba3ati && hash.jenzeer) {
+			return "continue";
+		} else if (!hash.villager && hash.ba3ati && hash.jenzeer) {
+			return "continue";
+		} else if (hash.villager && !hash.ba3ati && hash.jenzeer) {
+			return "continue";
+		} else if (hash.villager && hash.ba3ati && !hash.jenzeer) {
+			return "continue";
+		} else if (hash.villager && !hash.ba3ati && !hash.jenzeer) {
+			return "فاز القرويون";
+		} else if (!hash.villager && hash.ba3ati && !hash.jenzeer) {
+			return "فاز البعايت";
+		} else if (!hash.villager && !hash.ba3ati && hash.jenzeer) {
+			return "فاز أبو جنزير";
+		} else if (!hash.villager && !hash.ba3ati && !hash.jenzeer) {
+			return "مات الجميع";
+		} else {
+			return "no_Win";
+		}
 	};
 
 	const handleNext = async () => {
@@ -58,11 +99,29 @@ const Victims = ({ route, navigation }) => {
 			myId,
 		});
 
-		navigation.navigate("vote", {
-			joinedPlayers,
-			roomId: route.params.roomId,
-			MyId: myId,
-		});
+		const getPlayers = inGamePlayers(joinedPlayers);
+		if (getPlayers) {
+			const hashmap = getPlayers.reduce((acc, val) => {
+				acc[val] = (acc[val] || 0) + 1;
+				return acc;
+			}, {});
+			// alert(gameState(hashmap));
+			const res = gameState(hashmap);
+			if (res === "continue") {
+				navigation.dispatch(
+					StackActions.replace("vote", {
+						joinedPlayers,
+						roomId: route.params.roomId,
+						MyId: myId,
+					})
+				);
+			} else {
+				navigation.dispatch(
+					StackActions.replace("win", { joinedPlayers, win: res })
+				);
+			}
+			// alert(JSON.stringify(hashmap));
+		}
 	};
 
 	// const noD = [];

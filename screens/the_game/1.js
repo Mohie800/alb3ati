@@ -12,6 +12,7 @@ import JoinedPlayer from "../../components/JoinedPlayer";
 import { useEffect, useState } from "react";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 const GamePage = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState(
@@ -20,13 +21,13 @@ const GamePage = ({ route, navigation }) => {
 	const [target, setTarget] = useState(null);
 	const [MyId, setMyId] = useState(route.params.MyId);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	const handleKill = async () => {
 		const myId = await SecureStore.getItemAsync("id");
@@ -35,10 +36,12 @@ const GamePage = ({ route, navigation }) => {
 			playerId: target,
 			myId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	// useEffect(() => {

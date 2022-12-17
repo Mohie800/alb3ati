@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 function ViewRole({ route, navigation }) {
 	const [RoleName, setRoleName] = useState(null);
@@ -20,13 +21,13 @@ function ViewRole({ route, navigation }) {
 	);
 	const [image, setImage] = useState(null);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	const getRoleName = () => {
 		switch (roleId) {
@@ -71,10 +72,12 @@ function ViewRole({ route, navigation }) {
 			gameId: route.params.roomId,
 			myId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	useEffect(() => {

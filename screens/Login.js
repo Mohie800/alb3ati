@@ -17,15 +17,17 @@ import server from "../api/server";
 export default function Login({ navigation }) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [disabled, setDisabled] = useState(false);
 
 	const saveToken = async (key, value) => {
 		await SecureStore.setItemAsync(key, value);
 	};
 
 	const handleLogin = async () => {
-		const json = { email, password };
+		const json = { email: email.toLowerCase().trim(), password };
 
 		try {
+			setDisabled(true);
 			const { data } = await server.post("/login", json);
 			saveToken("token", data.token);
 			saveToken("name", data.name);
@@ -35,7 +37,9 @@ export default function Login({ navigation }) {
 			}
 			// alert(JSON.stringify(data));
 		} catch (e) {
-			alert(e);
+			setDisabled(false);
+			alert("حاول مرةاخرى");
+			// alert(e);
 		}
 	};
 
@@ -70,7 +74,11 @@ export default function Login({ navigation }) {
 				<Text style={styles.forgot_button}>Forgot Password?</Text>
 			</TouchableOpacity>
 
-			<TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+			<TouchableOpacity
+				style={disabled ? styles.disabledloginBtn : styles.loginBtn}
+				disabled={disabled}
+				onPress={handleLogin}
+			>
 				<Text style={styles.loginText}>تسجيل دخول</Text>
 			</TouchableOpacity>
 		</View>
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		color: "#fff",
-		fontFamily: "a-massir-ballpoint",
+		// fontFamily: "a-massir-ballpoint",
 	},
 
 	forgot_button: {
@@ -134,5 +142,15 @@ const styles = StyleSheet.create({
 	loginText: {
 		color: "#fff",
 		fontFamily: "a-massir-ballpoint",
+	},
+	disabledloginBtn: {
+		width: 200,
+		borderRadius: 25,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		marginTop: 40,
+		backgroundColor: "#6b6b6b",
+		// bottom: 20,
 	},
 });

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { StackActions } from "@react-navigation/native";
 
 const GamePage = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState();
@@ -21,13 +22,13 @@ const GamePage = ({ route, navigation }) => {
 	const [player, setPlayer] = useState({});
 	const [loading, setloading] = useState(true);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	const handleKill = async () => {
 		const myId = await SecureStore.getItemAsync("id");
@@ -36,10 +37,12 @@ const GamePage = ({ route, navigation }) => {
 			playerId: target,
 			myId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	const handleProtectAll = async () => {
@@ -48,10 +51,12 @@ const GamePage = ({ route, navigation }) => {
 			gameId: route.params.roomId,
 			myId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	const handleNext = async () => {
@@ -60,10 +65,12 @@ const GamePage = ({ route, navigation }) => {
 			gameId: route.params.roomId,
 			myId,
 		});
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	const getGame = async () => {

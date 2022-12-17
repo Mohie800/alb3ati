@@ -3,45 +3,20 @@ import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import server from "../../api/server";
+import { StackActions } from "@react-navigation/native";
 
 const NewNight = ({ route, navigation }) => {
 	const [player, setPlayer] = useState(null);
 	const [loading, setloading] = useState(true);
 	const [joinedPlayers, setJoinedPlayers] = useState(null);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				// if (!hasUnsavedChanges) {
-				//   // If we don't have unsaved changes, then we don't need to do anything
-				//   return;
-				// }
-
-				// Prevent default behavior of leaving the screen
-				e.preventDefault();
-
-				// Prompt the user before leaving the screen
-				// Alert.alert(
-				// 	"Discard changes?",
-				// 	"You have unsaved changes. Are you sure to discard them and leave the screen?",
-				// 	[
-				// 		{
-				// 			text: "Don't leave",
-				// 			style: "cancel",
-				// 			onPress: () => {},
-				// 		},
-				// 		{
-				// 			text: "Discard",
-				// 			style: "destructive",
-				// 			// If the user confirmed, then we dispatch the action we blocked earlier
-				// 			// This will continue the action that had triggered the removal of the screen
-				// 			onPress: () => navigation.dispatch(e.data.action),
-				// 		},
-				// 	]
-				// );
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	const getGame = async () => {
 		const myId = await SecureStore.getItemAsync("id");
@@ -67,16 +42,20 @@ const NewNight = ({ route, navigation }) => {
 	}, []);
 
 	const handleStartGame = async () => {
-		alert(JSON.stringify(route.params));
+		// alert(JSON.stringify(route.params));
 		const myId = await SecureStore.getItemAsync("id");
 		const roleId = await SecureStore.getItemAsync("my_role");
+		await server.post("/game/start", { gameId: route.params.roomId, myId });
+		await server.post("/game/clearvote", { gameId: route.params.roomId });
 
-		navigation.navigate(`role${roleId}`, {
-			joinedPlayers,
-			roomId: route.params.roomId,
-			MyId: myId,
-			player,
-		});
+		navigation.dispatch(
+			StackActions.replace(`role${roleId}`, {
+				joinedPlayers,
+				roomId: route.params.roomId,
+				MyId: myId,
+				player,
+			})
+		);
 		// console.log(player);
 	};
 

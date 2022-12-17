@@ -2,13 +2,13 @@ import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useEffect } from "react";
 
 const OutOfTheGame = ({ navigation }) => {
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	return (
 		<View style={styles.container}>

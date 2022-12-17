@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { StackActions } from "@react-navigation/native";
 import {
 	StyleSheet,
 	Text,
@@ -28,13 +29,13 @@ export default function Host({ route, navigation }) {
 	const [ready, setReady] = useState(true);
 	const [stop, setStop] = useState(true);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	useEffect(() => {
 		setReady(true);
@@ -61,7 +62,9 @@ export default function Host({ route, navigation }) {
 			gameId: route.params.roomId,
 		});
 		alert(JSON.stringify(game.data));
-		navigation.navigate("victim", { joinedPlayers, roomId });
+		navigation.dispatch(
+			StackActions.replace("victim", { joinedPlayers, roomId })
+		);
 	};
 
 	const getGame = async () => {

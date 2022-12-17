@@ -10,6 +10,7 @@ import {
 import JoinedPlayer from "../../components/JoinedPlayer";
 import { useState, useEffect } from "react";
 import server from "../../api/server";
+import { StackActions } from "@react-navigation/native";
 
 const GamePage = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState(
@@ -19,22 +20,24 @@ const GamePage = ({ route, navigation }) => {
 	const [exposed, setExposed] = useState(null);
 	const [playerName, setPlayerName] = useState(null);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(
+	// 	() =>
+	// 		navigation.addListener("beforeRemove", (e) => {
+	// 			e.preventDefault();
+	// 		}),
+	// 	[navigation]
+	// );
 
 	const exposeRole = async () => {
 		// alert(exposed);
-		navigation.navigate("viewrole", {
-			roleId: exposed,
-			playerName,
-			joinedPlayers,
-			roomId: route.params.roomId,
-		});
+		navigation.dispatch(
+			StackActions.replace("viewrole", {
+				roleId: exposed,
+				playerName,
+				joinedPlayers,
+				roomId: route.params.roomId,
+			})
+		);
 	};
 	const handleSelect = (item) => {
 		setTarget(item.playerId);

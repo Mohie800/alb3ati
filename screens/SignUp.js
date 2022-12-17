@@ -16,19 +16,27 @@ export default function SignUp({ navigation }) {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [name, setName] = useState("");
+	const [disabled, setDisabled] = useState(false);
 
 	const signUp = async () => {
-		if (password !== confirmPassword) {
-			return;
-		}
-
-		const { data } = await server.post("/register", {
-			name,
-			password,
-			email,
-		});
-		if (data) {
-			navigation.navigate("login");
+		try {
+			if (password !== confirmPassword) {
+				alert("كلمة المرور غير متطابقة");
+				return;
+			}
+			setDisabled(true);
+			const { data } = await server.post("/register", {
+				name,
+				password,
+				email,
+			});
+			if (data) {
+				navigation.navigate("login");
+			}
+		} catch (e) {
+			setDisabled(false);
+			alert("حاول مرةاخرى");
+			// alert(e);
 		}
 	};
 
@@ -76,7 +84,11 @@ export default function SignUp({ navigation }) {
 				/>
 			</View>
 
-			<TouchableOpacity style={styles.loginBtn} onPress={signUp}>
+			<TouchableOpacity
+				style={disabled ? styles.disabledloginBtn : styles.loginBtn}
+				disabled={disabled}
+				onPress={signUp}
+			>
 				<Text style={styles.loginText}>تسجيل مستخدم جديد</Text>
 			</TouchableOpacity>
 		</View>
@@ -120,8 +132,8 @@ const styles = StyleSheet.create({
 		// marginLeft: 20,
 		// justifyContent: "center",
 		// alignItems: "center",
-		color: "#fff",
-		fontFamily: "a-massir-ballpoint",
+		color: "#ffffff",
+		// fontFamily: "a-massir-ballpoint",
 		// right: 10,
 	},
 
@@ -142,5 +154,15 @@ const styles = StyleSheet.create({
 	loginText: {
 		color: "#fff",
 		fontFamily: "a-massir-ballpoint",
+	},
+	disabledloginBtn: {
+		width: 200,
+		borderRadius: 25,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		marginTop: 40,
+		backgroundColor: "#6b6b6b",
+		// bottom: 20,
 	},
 });

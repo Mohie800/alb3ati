@@ -10,6 +10,7 @@ import {
 import JoinedPlayer from "../../components/JoinedPlayer";
 import { useState, useEffect } from "react";
 import server from "../../api/server";
+import { StackActions } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 
 const GamePage = ({ route, navigation }) => {
@@ -18,14 +19,13 @@ const GamePage = ({ route, navigation }) => {
 	);
 	const [target, setTarget] = useState(null);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
-
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 	const Item = ({ item }) => {
 		if (item.playerId != route.params.MyId && item.inGame) {
 			return (
@@ -52,10 +52,12 @@ const GamePage = ({ route, navigation }) => {
 			myId,
 		});
 		// alert(JSON.stringify(data));
-		navigation.navigate("ready", {
-			roomId: route.params.roomId,
-			joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("ready", {
+				roomId: route.params.roomId,
+				joinedPlayers,
+			})
+		);
 	};
 
 	return (

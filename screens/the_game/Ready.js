@@ -19,6 +19,7 @@ import JoinedPlayer from "../../components/JoinedPlayer";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
 import { useInterval } from "../../common";
+import { StackActions } from "@react-navigation/native";
 
 export default function Host({ route, navigation }) {
 	const [isConnected, setIsConnected] = useState(null);
@@ -29,13 +30,13 @@ export default function Host({ route, navigation }) {
 	const [ready, setReady] = useState(true);
 	const [stop, setStop] = useState(true);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	useEffect(() => {
 		setReady(true);
@@ -59,7 +60,9 @@ export default function Host({ route, navigation }) {
 		const game = await server.post("/game/assign", {
 			gameId: route.params.roomId,
 		});
-		navigation.navigate("victims", { joinedPlayers, roomId });
+		navigation.dispatch(
+			StackActions.replace("victims", { joinedPlayers, roomId })
+		);
 	};
 
 	const getGame = async () => {

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import server from "../../api/server";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 const GamePage = ({ route, navigation }) => {
 	const [joinedPlayers, setJoinedPlayers] = useState(null);
@@ -21,13 +22,13 @@ const GamePage = ({ route, navigation }) => {
 	const [player, setPlayer] = useState(null);
 	const [loading, setloading] = useState(true);
 
-	useEffect(
-		() =>
-			navigation.addListener("beforeRemove", (e) => {
-				e.preventDefault();
-			}),
-		[navigation]
-	);
+	// useEffect(() => {
+	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+	// 		e.preventDefault();
+	// 		// if (!nav) navigation.dispatch(e.data.action);
+	// 	});
+	// 	return unsubscribe;
+	// }, [navigation]);
 
 	const getGame = async () => {
 		const myId = await SecureStore.getItemAsync("id");
@@ -40,7 +41,7 @@ const GamePage = ({ route, navigation }) => {
 		// console.log(data.players);
 		const findMe = findPlayer(data.players, myId);
 		setPlayer(findMe[0]);
-		alert(JSON.stringify(findMe));
+		// alert(JSON.stringify(findMe));
 		setloading(!loading);
 		// alert(player);
 	};
@@ -61,10 +62,12 @@ const GamePage = ({ route, navigation }) => {
 			playerId: target,
 			myId,
 		});
-		navigation.navigate("votesready", {
-			roomId: route.params.roomId,
-			// joinedPlayers,
-		});
+		navigation.dispatch(
+			StackActions.replace("votesready", {
+				roomId: route.params.roomId,
+				// joinedPlayers,
+			})
+		);
 		// alert(JSON.stringify(data));
 	};
 
@@ -80,7 +83,7 @@ const GamePage = ({ route, navigation }) => {
 
 	const out = () => {
 		if (!player.inGame) {
-			navigation.navigate("out");
+			navigation.dispatch(StackActions.replace("out"));
 		}
 	};
 
