@@ -7,9 +7,7 @@ const Home = ({ navigation }) => {
 			<View style={styles.btn}>
 				<TouchableOpacity
 					style={styles.loginBtn}
-					onPress={() =>
-						navigation.dispatch(StackActions.replace("host"))
-					}
+					onPress={() => navigation.navigate("host")}
 				>
 					<Text style={styles.loginText}>استضف لعبة</Text>
 				</TouchableOpacity>
@@ -17,9 +15,7 @@ const Home = ({ navigation }) => {
 			<View style={styles.btn}>
 				<TouchableOpacity
 					style={styles.loginBtn}
-					onPress={() =>
-						navigation.dispatch(StackActions.replace("looby"))
-					}
+					onPress={() => navigation.navigate("lobby")}
 				>
 					<Text style={styles.loginText}>الانضمام للعبة</Text>
 				</TouchableOpacity>

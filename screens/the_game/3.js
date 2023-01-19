@@ -54,6 +54,7 @@ const GamePage = ({ route, navigation }) => {
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
 				joinedPlayers,
+				nightNum: route.params.nightNum,
 			})
 		);
 	};
@@ -81,37 +82,41 @@ const GamePage = ({ route, navigation }) => {
 	};
 
 	return (
-		<View style={Styles.container}>
-			<Spinner visible={loading} textContent={"Loading..."} />
-			<View style={Styles.viewArea}>
-				<View style={Styles.head}>
-					<Image
-						source={require("../../assets/al3omda.png")}
-						style={Styles.rolePic}
-					/>
-					<Text style={Styles.text}>العمدة</Text>
-				</View>
-				<View>
-					<View style={Styles.scrollArea}>
-						<View style={Styles.scrollArea_contentContainerStyle}>
-							<FlatList
-								data={joinedPlayers}
-								numColumns={4}
-								renderItem={Item}
-							/>
+		<ScrollView>
+			<View style={Styles.container}>
+				<Spinner visible={loading} textContent={"Loading..."} />
+				<View style={Styles.viewArea}>
+					<View style={Styles.head}>
+						<Image
+							source={require("../../assets/al3omda.png")}
+							style={Styles.rolePic}
+						/>
+						<Text style={Styles.text}>العمدة</Text>
+					</View>
+					<View>
+						<View style={Styles.scrollArea}>
+							<View
+								style={Styles.scrollArea_contentContainerStyle}
+							>
+								<FlatList
+									data={joinedPlayers}
+									numColumns={3}
+									renderItem={Item}
+								/>
+							</View>
 						</View>
 					</View>
-				</View>
-				<View>
-					<TouchableOpacity
-						style={Styles.loginBtn}
-						onPress={handleProtect}
-					>
-						<Text style={Styles.loginText}>حماية</Text>
-					</TouchableOpacity>
+					<View>
+						<TouchableOpacity
+							style={Styles.loginBtn}
+							onPress={handleProtect}
+						>
+							<Text style={Styles.loginText}>حماية</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
@@ -144,8 +149,9 @@ const Styles = StyleSheet.create({
 		// height: 319,
 		width: 290,
 		// flexDirection: "row",
-		overflow: "visible",
-		flex: 3,
+		overflow: "scroll",
+		alignItems: "center",
+		// flex: 1,
 	},
 	item: {
 		flex: 1,

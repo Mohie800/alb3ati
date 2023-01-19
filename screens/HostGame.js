@@ -58,21 +58,6 @@ export default function Host({ navigation }) {
 	// 	});
 	// }, [socket]);
 
-	const role = () => {
-		const roleId = Math.random();
-		if (roleId < 0.08) {
-			return 5;
-		} else if (roleId < 0.12) {
-			return 4;
-		} else if (roleId < 0.31) {
-			return 1;
-		} else if (roleId < 0.29) {
-			return 3;
-		} else {
-			return 2;
-		}
-	};
-
 	const handleCreateGame = async () => {
 		const playerName = await SecureStore.getItemAsync("name");
 		const playerId = await SecureStore.getItemAsync("id");
@@ -83,7 +68,6 @@ export default function Host({ navigation }) {
 		const game = await server.post("/game/create", {
 			gameId: roomId,
 			playerName,
-			roleId: role(),
 			playerId,
 		});
 		// alert(JSON.stringify(game.data));
@@ -102,14 +86,6 @@ export default function Host({ navigation }) {
 		// 	setLastPong(false);
 		// }
 	}, [joinedPlayers]);
-	const assignRoles = async () => {
-		// const playerName = await SecureStore.getItemAsync("name");
-		// alert(playerName);
-		const game = await server.post("/game/assign", {
-			gameId: roomId,
-		});
-		alert(JSON.stringify(game.data));
-	};
 
 	const getGame = async () => {
 		const { data } = await server
@@ -122,15 +98,21 @@ export default function Host({ navigation }) {
 		// console.log(data.players);
 		// setLastPong(true);
 	};
-	useInterval(() => getGame(), 6000);
+	useInterval(() => getGame(), 3000);
 
 	const saveToken = async (key, value) => {
 		await SecureStore.setItemAsync(key, value);
 	};
 
-	const handleStartGame = () => {
-		saveToken("my_role", player.roleId);
-		navigation.navigate(`new`, {
+	const handleStartGame = async () => {
+		// const myId = await SecureStore.getItemAsync("id");
+		// if (player.started) {
+		// 	alert("غير مسموح");
+		// 	return;
+		// }
+		await server.post("/game/gamestarted", { gameId: roomId });
+		// saveToken("my_role", player.roleId);
+		navigation.navigate(`customRoles`, {
 			joinedPlayers,
 			roomId,
 			MyId,
@@ -147,40 +129,42 @@ export default function Host({ navigation }) {
 	};
 
 	return (
-		<View style={styles.container}>
-			<Spinner visible={lastPong} textContent={"Loading..."} />
-			{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
+		<ScrollView>
+			<View style={styles.container}>
+				<Spinner visible={lastPong} textContent={"Loading..."} />
+				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
 
-			<StatusBar style="auto" />
-			<View>
-				<View style={styles.rect}>
-					<View style={styles.loremIpsum2Row}>
-						<Text style={styles.text}>
-							رمز الاستضافة الخاص بك هو :
-						</Text>
-						<Text selectable={true} style={styles.text1}>
-							{roomId}
-						</Text>
+				<StatusBar style="auto" />
+				<View>
+					<View style={styles.rect}>
+						<View style={styles.loremIpsum2Row}>
+							<Text style={styles.text}>
+								رمز الاستضافة الخاص بك هو :
+							</Text>
+							<Text selectable={true} style={styles.text1}>
+								{roomId}
+							</Text>
+						</View>
+					</View>
+					<View style={styles.scrollArea}>
+						<View style={styles.scrollArea_contentContainerStyle}>
+							<FlatList
+								data={joinedPlayers}
+								numColumns={4}
+								renderItem={Item}
+							/>
+						</View>
 					</View>
 				</View>
-				<View style={styles.scrollArea}>
-					<View style={styles.scrollArea_contentContainerStyle}>
-						<FlatList
-							data={joinedPlayers}
-							numColumns={4}
-							renderItem={Item}
-						/>
-					</View>
-				</View>
+
+				<TouchableOpacity
+					style={styles.loginBtn}
+					onPress={() => handleStartGame()}
+				>
+					<Text style={styles.loginText}>التالي</Text>
+				</TouchableOpacity>
 			</View>
-
-			<TouchableOpacity
-				style={styles.loginBtn}
-				onPress={() => handleStartGame()}
-			>
-				<Text style={styles.loginText}>ابدأ اللعبة</Text>
-			</TouchableOpacity>
-		</View>
+		</ScrollView>
 	);
 }
 

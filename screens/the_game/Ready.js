@@ -48,8 +48,12 @@ export default function Host({ route, navigation }) {
 	};
 
 	useEffect(() => {
-		const allEqual = (arr) => arr.every((v) => v.isReady === true);
-		const r = allEqual(joinedPlayers);
+		const inGamePlayers = joinedPlayers.filter(
+			(player) => player.inGame === true
+		);
+		const allEqual = (arr) =>
+			arr.every((v) => v.isReady === true && v.inGame === true);
+		const r = allEqual(inGamePlayers);
 		if (stop) setReady(true);
 		if (r) {
 			setReady(false);
@@ -61,7 +65,11 @@ export default function Host({ route, navigation }) {
 			gameId: route.params.roomId,
 		});
 		navigation.dispatch(
-			StackActions.replace("victims", { joinedPlayers, roomId })
+			StackActions.replace("victims", {
+				joinedPlayers,
+				roomId,
+				nightNum: route.params.nightNum,
+			})
 		);
 	};
 
@@ -73,48 +81,52 @@ export default function Host({ route, navigation }) {
 		// console.log(data.players);
 		if (data) setLastPong(false);
 	};
-	useInterval(() => getGame(), 6000);
+	useInterval(() => getGame(), 3000);
 
 	const Item = ({ item }) => {
-		return (
-			<View style={styles.item}>
-				<JoinedPlayer name={item.playerName} />
-				{item.isReady && <View style={styles.check}></View>}
-			</View>
-		);
+		if (item.playerId != route.params.MyId && item.inGame) {
+			return (
+				<View style={styles.item}>
+					<JoinedPlayer name={item.playerName} />
+					{item.isReady && <View style={styles.check}></View>}
+				</View>
+			);
+		}
 	};
 
 	return (
-		<View style={styles.container}>
-			{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
-			<Spinner visible={lastPong} textContent={"Loading..."} />
-			<StatusBar style="auto" />
-			<View>
-				<View style={styles.rect}>
-					<View style={styles.loremIpsum2Row}>
-						<Text style={styles.text}>انتظر بقية اللاعبين</Text>
+		<ScrollView>
+			<View style={styles.container}>
+				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
+				<Spinner visible={lastPong} textContent={"Loading..."} />
+				<StatusBar style="auto" />
+				<View>
+					<View style={styles.rect}>
+						<View style={styles.loremIpsum2Row}>
+							<Text style={styles.text}>انتظر بقية اللاعبين</Text>
+						</View>
 					</View>
-				</View>
-				<View style={styles.scrollArea}>
-					<View style={styles.scrollArea_contentContainerStyle}>
-						<FlatList
-							data={joinedPlayers}
-							numColumns={4}
-							renderItem={Item}
-						/>
+					<View style={styles.scrollArea}>
+						<View style={styles.scrollArea_contentContainerStyle}>
+							<FlatList
+								data={joinedPlayers}
+								numColumns={4}
+								renderItem={Item}
+							/>
+						</View>
 					</View>
+					<Timer timestamp={60} timerCallback={handleTimeOut} />
 				</View>
-				<Timer timestamp={60} timerCallback={handleTimeOut} />
-			</View>
 
-			<TouchableOpacity
-				style={ready ? styles.disabledloginBtn : styles.loginBtn}
-				onPress={() => assignRoles()}
-				disabled={ready}
-			>
-				<Text style={styles.loginText}>جاهز</Text>
-			</TouchableOpacity>
-		</View>
+				<TouchableOpacity
+					style={ready ? styles.disabledloginBtn : styles.loginBtn}
+					onPress={() => assignRoles()}
+					disabled={ready}
+				>
+					<Text style={styles.loginText}>جاهز</Text>
+				</TouchableOpacity>
+			</View>
+		</ScrollView>
 	);
 }
 

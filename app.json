@@ -1,39 +1,37 @@
 {
-  "expo": {
-    "name": "AlBa3ati",
-    "slug": "alba3ati",
-    "version": "0.0.2",
-    "orientation": "portrait",
-    "icon": "./assets/adapt.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash1.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#1f30a0"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adapt.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.mohy.alba3ati"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "8c23cbf4-e501-4709-96d1-f10fd65a0182"
-      }
-    }
-  }
+	"expo": {
+		"name": "AlBa3ati",
+		"slug": "alba3ati",
+		"version": "0.0.3",
+		"orientation": "portrait",
+		"icon": "./assets/adapt.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash1.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#1f30a0"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adapt.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"package": "com.mohy.alba3ati"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "8c23cbf4-e501-4709-96d1-f10fd65a0182"
+			}
+		}
+	}
 }

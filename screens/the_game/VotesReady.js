@@ -47,8 +47,11 @@ export default function Host({ route, navigation }) {
 	};
 
 	useEffect(() => {
+		const inGamePlayers = joinedPlayers.filter(
+			(player) => player.inGame === true
+		);
 		const allEqual = (arr) => arr.every((v) => v.isReady === true);
-		const r = allEqual(joinedPlayers);
+		const r = allEqual(inGamePlayers);
 		if (stop) setReady(true);
 		if (r) {
 			setReady(false);
@@ -61,9 +64,13 @@ export default function Host({ route, navigation }) {
 		const game = await server.post("/game/assign", {
 			gameId: route.params.roomId,
 		});
-		alert(JSON.stringify(game.data));
+		// alert(JSON.stringify(game.data));
 		navigation.dispatch(
-			StackActions.replace("victim", { joinedPlayers, roomId })
+			StackActions.replace("victim", {
+				joinedPlayers,
+				roomId,
+				nightNum: route.params.nightNum,
+			})
 		);
 	};
 
@@ -75,49 +82,53 @@ export default function Host({ route, navigation }) {
 		// console.log(data.players);
 		if (data) setLastPong(false);
 	};
-	useInterval(() => getGame(), 6000);
+	useInterval(() => getGame(), 3000);
 
 	const Item = ({ item }) => {
-		return (
-			<View style={styles.item}>
-				<JoinedPlayer name={item.playerName} />
-				{item.isReady && <View style={styles.check}></View>}
-			</View>
-		);
+		if (item.playerId != route.params.MyId && item.inGame) {
+			return (
+				<View style={styles.item}>
+					<JoinedPlayer name={item.playerName} />
+					{item.isReady && <View style={styles.check}></View>}
+				</View>
+			);
+		}
 	};
 
 	return (
-		<View style={styles.container}>
-			<Spinner visible={lastPong} textContent={"Loading..."} />
-			{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
+		<ScrollView>
+			<View style={styles.container}>
+				<Spinner visible={lastPong} textContent={"Loading..."} />
+				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
 
-			<StatusBar style="auto" />
-			<View>
-				<View style={styles.rect}>
-					<View style={styles.loremIpsum2Row}>
-						<Text style={styles.text}>انتظر بقية اللاعبين</Text>
+				<StatusBar style="auto" />
+				<View>
+					<View style={styles.rect}>
+						<View style={styles.loremIpsum2Row}>
+							<Text style={styles.text}>انتظر بقية اللاعبين</Text>
+						</View>
 					</View>
-				</View>
-				<View style={styles.scrollArea}>
-					<View style={styles.scrollArea_contentContainerStyle}>
-						<FlatList
-							data={joinedPlayers}
-							numColumns={4}
-							renderItem={Item}
-						/>
+					<View style={styles.scrollArea}>
+						<View style={styles.scrollArea_contentContainerStyle}>
+							<FlatList
+								data={joinedPlayers}
+								numColumns={4}
+								renderItem={Item}
+							/>
+						</View>
 					</View>
+					<Timer timestamp={60} timerCallback={handleTimeOut} />
 				</View>
-				<Timer timestamp={60} timerCallback={handleTimeOut} />
+
+				<TouchableOpacity
+					style={ready ? styles.disabledloginBtn : styles.loginBtn}
+					onPress={() => assignRoles()}
+					disabled={ready}
+				>
+					<Text style={styles.loginText}>جاهز</Text>
+				</TouchableOpacity>
 			</View>
-
-			<TouchableOpacity
-				style={ready ? styles.disabledloginBtn : styles.loginBtn}
-				onPress={() => assignRoles()}
-				disabled={ready}
-			>
-				<Text style={styles.loginText}>جاهز</Text>
-			</TouchableOpacity>
-		</View>
+		</ScrollView>
 	);
 }
 

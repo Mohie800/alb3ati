@@ -20,16 +20,13 @@ export default function SignUp({ navigation }) {
 
 	const signUp = async () => {
 		try {
+			const json = { email: email.toLowerCase().trim(), password, name };
 			if (password !== confirmPassword) {
 				alert("كلمة المرور غير متطابقة");
 				return;
 			}
 			setDisabled(true);
-			const { data } = await server.post("/register", {
-				name,
-				password,
-				email,
-			});
+			const { data } = await server.post("/register", json);
 			if (data) {
 				navigation.navigate("login");
 			}

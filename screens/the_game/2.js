@@ -36,11 +36,13 @@ const GamePage = ({ route, navigation }) => {
 			gameId: route.params.roomId,
 			playerId: target,
 			myId,
+			nightNum: route.params.nightNum,
 		});
 		navigation.dispatch(
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
 				joinedPlayers,
+				nightNum: route.params.nightNum,
 			})
 		);
 	};
@@ -64,11 +66,13 @@ const GamePage = ({ route, navigation }) => {
 		await server.post("game/raedy", {
 			gameId: route.params.roomId,
 			myId,
+			// nightNum: route.params.nightNum
 		});
 		navigation.dispatch(
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
 				joinedPlayers,
+				nightNum: route.params.nightNum,
 			})
 		);
 	};
@@ -112,59 +116,63 @@ const GamePage = ({ route, navigation }) => {
 	};
 
 	return (
-		<View style={Styles.container}>
-			<Spinner visible={loading} textContent={"Loading..."} />
-			<View style={Styles.viewArea}>
-				<View style={Styles.head}>
-					<Image
-						source={require("../../assets/damazeen.png")}
-						style={Styles.rolePic}
-					/>
-					<Text style={Styles.text}>شيخ الدمازين</Text>
-				</View>
-				<View>
-					<View style={Styles.scrollArea}>
-						<View style={Styles.scrollArea_contentContainerStyle}>
-							<FlatList
-								data={joinedPlayers}
-								numColumns={4}
-								renderItem={Item}
-							/>
+		<ScrollView>
+			<View style={Styles.container}>
+				<Spinner visible={loading} textContent={"Loading..."} />
+				<View style={Styles.viewArea}>
+					<View style={Styles.head}>
+						<Image
+							source={require("../../assets/damazeen.png")}
+							style={Styles.rolePic}
+						/>
+						<Text style={Styles.text}>شيخ الدمازين</Text>
+					</View>
+					<View>
+						<View style={Styles.scrollArea}>
+							<View
+								style={Styles.scrollArea_contentContainerStyle}
+							>
+								<FlatList
+									data={joinedPlayers}
+									numColumns={3}
+									renderItem={Item}
+								/>
+							</View>
 						</View>
 					</View>
-				</View>
-				<View style={Styles.btnGroup}>
-					<TouchableOpacity
-						style={
-							player.damazeenProtect
-								? Styles.disabledloginBtn
-								: Styles.loginBtn
-						}
-						onPress={handleProtectAll}
-						disabled={player.damazeenProtect}
-					>
-						<Text style={Styles.loginText}>حجاب</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={
-							player.damazeenKill
-								? Styles.disabledloginBtn
-								: Styles.loginBtn
-						}
-						onPress={handleKill}
-						disabled={player.damazeenKill}
-					>
-						<Text style={Styles.loginText}>كجور</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={Styles.loginBtn}
-						onPress={handleNext}
-					>
-						<Text style={Styles.loginText}>تخطي</Text>
-					</TouchableOpacity>
+					<View style={Styles.btnGroup}>
+						<TouchableOpacity
+							style={
+								player.damazeenProtect
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
+							onPress={handleProtectAll}
+							disabled={player.damazeenProtect}
+						>
+							<Text style={Styles.loginText}>حجاب</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={
+								player.damazeenKill
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
+							onPress={handleKill}
+							disabled={player.damazeenKill}
+						>
+							<Text style={Styles.loginText}>كجور</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={Styles.loginBtn}
+							onPress={handleNext}
+						>
+							<Text style={Styles.loginText}>تخطي</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
@@ -197,8 +205,9 @@ const Styles = StyleSheet.create({
 		// height: 319,
 		width: 290,
 		// flexDirection: "row",
-		overflow: "visible",
-		flex: 3,
+		overflow: "scroll",
+		alignItems: "center",
+		// flex: 1,
 	},
 	item: {
 		flex: 1,

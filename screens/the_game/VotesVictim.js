@@ -108,7 +108,7 @@ const VotesVictim = ({ route, navigation }) => {
 		} else if (hash.villager && !hash.ba3ati && !hash.jenzeer) {
 			return "فاز القرويون";
 		} else if (!hash.villager && hash.ba3ati && !hash.jenzeer) {
-			return "فاز البعايت";
+			return "فاز البعاعيت";
 		} else if (!hash.villager && !hash.ba3ati && hash.jenzeer) {
 			return "فاز أبو جنزير";
 		} else if (!hash.villager && !hash.ba3ati && !hash.jenzeer) {
@@ -140,6 +140,7 @@ const VotesVictim = ({ route, navigation }) => {
 					StackActions.replace("new", {
 						player: player,
 						roomId: route.params.roomId,
+						nightNum: Number(route.params.nightNum) + 1,
 					})
 				);
 			} else {

@@ -9,6 +9,7 @@ const NewNight = ({ route, navigation }) => {
 	const [player, setPlayer] = useState(null);
 	const [loading, setloading] = useState(true);
 	const [joinedPlayers, setJoinedPlayers] = useState(null);
+	const [nightNum, setNightNum] = useState(route.params.nightNum || 1);
 
 	// useEffect(() => {
 	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -44,16 +45,17 @@ const NewNight = ({ route, navigation }) => {
 	const handleStartGame = async () => {
 		// alert(JSON.stringify(route.params));
 		const myId = await SecureStore.getItemAsync("id");
-		const roleId = await SecureStore.getItemAsync("my_role");
+		// const roleId = await SecureStore.getItemAsync("my_role");
 		await server.post("/game/start", { gameId: route.params.roomId, myId });
 		await server.post("/game/clearvote", { gameId: route.params.roomId });
 
 		navigation.dispatch(
-			StackActions.replace(`role${roleId}`, {
+			StackActions.replace(`role${player.roleId}`, {
 				joinedPlayers,
 				roomId: route.params.roomId,
 				MyId: myId,
 				player,
+				nightNum,
 			})
 		);
 		// console.log(player);

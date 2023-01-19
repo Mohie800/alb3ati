@@ -23,6 +23,7 @@ import VotesReady from "../the_game/VotesReady";
 import NewNight from "../the_game/NewNight";
 import OutOfTheGame from "../the_game/OutOfTheGame";
 import VillagersWins from "../the_game/VillagersWins";
+import CustomRoles from "../the_game/customRoles/CustomRoles";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +37,8 @@ const LandNavigator = () => {
 				<Stack.Screen name="home" component={Home} />
 				<Stack.Screen name="host" component={Host} />
 				<Stack.Screen name="game" component={GamePage} />
-				<Stack.Screen name="looby" component={Looby} />
+				<Stack.Screen name="lobby" component={Looby} />
+				<Stack.Screen name="customRoles" component={CustomRoles} />
 				<Stack.Screen
 					name="ready"
 					component={Ready}

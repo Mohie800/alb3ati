@@ -33,6 +33,7 @@ export default function Login({ navigation }) {
 			saveToken("name", data.name);
 			saveToken("id", data.id);
 			if (data.token) {
+				setDisabled(false);
 				navigation.navigate("home");
 			}
 			// alert(JSON.stringify(data));

@@ -17,6 +17,7 @@ import {
 import JoinedPlayer from "../../components/JoinedPlayer";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
+import { StackActions } from "@react-navigation/native";
 
 export default function Host({ navigation }) {
 	const [isConnected, setIsConnected] = useState(null);
@@ -26,6 +27,7 @@ export default function Host({ navigation }) {
 	const [itemData, setItemData] = useState([]);
 	const [player, setPlayer] = useState({});
 	const [MyId, setMyId] = useState(null);
+	const [startGame, setStartGame] = useState(null);
 
 	// const socket = io("https://eager-ruby-pinafore.cyclic.app"); //.connect("https://eager-ruby-pinafore.cyclic.app");
 
@@ -80,7 +82,7 @@ export default function Host({ navigation }) {
 			playerId: id,
 			roleId: role(),
 		});
-		if (game.data) alert("تم");
+		if (game.data) alert(game.data);
 	};
 
 	const saveToken = async (key, value) => {
@@ -93,7 +95,7 @@ export default function Host({ navigation }) {
 			alert("غير مسموح");
 			return;
 		}
-		saveToken("my_role", player.roleId);
+		// saveToken("my_role", player.roleId);
 
 		navigation.navigate(`new`, {
 			joinedPlayers,
@@ -113,8 +115,9 @@ export default function Host({ navigation }) {
 		const me = data.players.filter((p) => p.playerId === id);
 		setPlayer(me[0]);
 		setMyId(id);
+		setStartGame(data.startGame);
 	};
-	useInterval(() => getGame(), 6000);
+	useInterval(() => getGame(), 3000);
 
 	const Item = ({ item }) => {
 		return (
@@ -124,45 +127,57 @@ export default function Host({ navigation }) {
 		);
 	};
 
+	useEffect(() => {
+		if (startGame) {
+			navigation.navigate(`new`, {
+				roomId,
+			});
+		}
+	}, [startGame]);
+
 	return (
-		<View style={styles.container}>
-			{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
+		<ScrollView>
+			<View style={styles.container}>
+				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
 
-			<StatusBar style="auto" />
-			<View>
-				<View style={styles.rect}>
-					<View style={styles.loremIpsum2Row}>
-						<Text style={styles.text1}>أدخل رمز الاستضافة :</Text>
-						<TextInput
-							style={styles.text}
-							onChangeText={(e) => setRoomId(e)}
-						/>
+				<StatusBar style="auto" />
+				<View>
+					<View style={styles.rect}>
+						<View style={styles.loremIpsum2Row}>
+							<Text style={styles.text1}>
+								أدخل رمز الاستضافة :
+							</Text>
+							<TextInput
+								style={styles.text}
+								onChangeText={(e) => setRoomId(e)}
+							/>
+						</View>
+						<TouchableOpacity
+							style={styles.loginBtn}
+							onPress={() => handleCreateGame()}
+						>
+							<Text style={styles.loginText}>انضمام</Text>
+						</TouchableOpacity>
 					</View>
-					<TouchableOpacity
-						style={styles.loginBtn}
-						onPress={() => handleCreateGame()}
-					>
-						<Text style={styles.loginText}>انضمام</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.scrollArea}>
-					<View style={styles.scrollArea_contentContainerStyle}>
-						<FlatList
-							data={joinedPlayers}
-							numColumns={4}
-							renderItem={Item}
-						/>
+					<View style={styles.scrollArea}>
+						<View style={styles.scrollArea_contentContainerStyle}>
+							<FlatList
+								data={joinedPlayers}
+								numColumns={4}
+								renderItem={Item}
+							/>
+						</View>
 					</View>
 				</View>
+
+				{/* <TouchableOpacity
+					style={styles.loginBtn}
+					onPress={() => handleStartGame()}
+				>
+					<Text style={styles.loginText}>ابدأ اللعبة</Text>
+				</TouchableOpacity> */}
 			</View>
-
-			<TouchableOpacity
-				style={styles.loginBtn}
-				onPress={() => handleStartGame()}
-			>
-				<Text style={styles.loginText}>ابدأ اللعبة</Text>
-			</TouchableOpacity>
-		</View>
+		</ScrollView>
 	);
 }
 

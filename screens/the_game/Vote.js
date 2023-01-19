@@ -65,6 +65,7 @@ const GamePage = ({ route, navigation }) => {
 		navigation.dispatch(
 			StackActions.replace("votesready", {
 				roomId: route.params.roomId,
+				nightNum: route.params.nightNum,
 				// joinedPlayers,
 			})
 		);
@@ -117,37 +118,43 @@ const GamePage = ({ route, navigation }) => {
 		}
 	};
 	return (
-		<View style={Styles.container}>
-			<Spinner visible={loading} textContent={"Loading..."} />
-			<View style={Styles.viewArea}>
-				<View style={Styles.head}>
-					<View style={Styles.rolePic}></View>
-					<Text>{name}</Text>
-				</View>
-				<View>
-					<View style={Styles.scrollArea}>
-						<View style={Styles.scrollArea_contentContainerStyle}>
-							<FlatList
-								data={joinedPlayers}
-								numColumns={4}
-								renderItem={Item}
-							/>
+		<ScrollView>
+			<View style={Styles.container}>
+				<Spinner visible={loading} textContent={"Loading..."} />
+				<View style={Styles.viewArea}>
+					<View style={Styles.head}>
+						<View style={Styles.rolePic}></View>
+						<Text>{name}</Text>
+					</View>
+					<View>
+						<View style={Styles.scrollArea}>
+							<View
+								style={Styles.scrollArea_contentContainerStyle}
+							>
+								<FlatList
+									data={joinedPlayers}
+									numColumns={4}
+									renderItem={Item}
+								/>
+							</View>
 						</View>
 					</View>
-				</View>
-				<View>
-					<TouchableOpacity
-						style={
-							disabled ? Styles.disabledloginBtn : Styles.loginBtn
-						}
-						onPress={handleVote}
-						disabled={disabled}
-					>
-						<Text style={Styles.loginText}>صوّت</Text>
-					</TouchableOpacity>
+					<View>
+						<TouchableOpacity
+							style={
+								disabled
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
+							onPress={handleVote}
+							disabled={disabled}
+						>
+							<Text style={Styles.loginText}>صوّت</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 

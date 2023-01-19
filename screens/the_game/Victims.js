@@ -19,6 +19,7 @@ const Victims = ({ route, navigation }) => {
 	const [renVic, setRenVic] = useState(false);
 	const [jenVic, setJenVic] = useState([]);
 	const [noD, setnoD] = useState([]);
+	const [nightNum, setNightNum] = useState(route.params.nightNum);
 
 	// useEffect(() => {
 	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -32,7 +33,7 @@ const Victims = ({ route, navigation }) => {
 
 	const getGame = async () => {
 		const { data } = await server
-			.get(`/game/${route.params}`)
+			.get(`/game/${route.params.roomId}`)
 			.catch((e) => console.log(e));
 		setJoinedPlayers(data.players);
 		// console.log(data.players);
@@ -68,7 +69,7 @@ const Victims = ({ route, navigation }) => {
 		} else if (hash.villager && !hash.ba3ati && !hash.jenzeer) {
 			return "فاز القرويون";
 		} else if (!hash.villager && hash.ba3ati && !hash.jenzeer) {
-			return "فاز البعايت";
+			return "فاز البعاعيت";
 		} else if (!hash.villager && !hash.ba3ati && hash.jenzeer) {
 			return "فاز أبو جنزير";
 		} else if (!hash.villager && !hash.ba3ati && !hash.jenzeer) {
@@ -113,6 +114,7 @@ const Victims = ({ route, navigation }) => {
 						joinedPlayers,
 						roomId: route.params.roomId,
 						MyId: myId,
+						nightNum: route.params.nightNum,
 					})
 				);
 			} else {
@@ -128,7 +130,10 @@ const Victims = ({ route, navigation }) => {
 
 	const renderVictims = () => {
 		return joinedPlayers.map((player) => {
-			if (!player.isAlive || player.killedByDamazeen) {
+			if (
+				(!player.isAlive || player.killedByDamazeen) &&
+				player.nightNum == nightNum
+			) {
 				// noD.push(1);
 				return (
 					<View key={player.playerId} style={styles.player}>
@@ -143,7 +148,7 @@ const Victims = ({ route, navigation }) => {
 
 	const renderJenzeerVictim = () => {
 		return joinedPlayers.map((player) => {
-			if (player.killedByjenzeer) {
+			if (player.killedByjenzeer && player.nightNum == nightNum) {
 				// jenVic.push(1);
 				// setJenVic([1]);
 				return (
@@ -178,7 +183,11 @@ const Victims = ({ route, navigation }) => {
 			// alert(data);
 		};
 		return joinedPlayers.map((player) => {
-			if (!player.isAlive || player.killedByDamazeen) {
+			if (
+				!player.isAlive ||
+				player.killedByDamazeen ||
+				player.killedByjenzeer
+			) {
 				setnoD([1]);
 				fuck(player.playerId);
 			}
@@ -188,6 +197,7 @@ const Victims = ({ route, navigation }) => {
 	useEffect(() => {
 		JenzeerVictim();
 		Victim();
+		getGame();
 	}, [joinedPlayers]);
 
 	const noDie = () => {

@@ -35,11 +35,13 @@ const GamePage = ({ route, navigation }) => {
 			gameId: route.params.roomId,
 			playerId: target,
 			myId,
+			nightNum: route.params.nightNum,
 		});
 		navigation.dispatch(
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
 				joinedPlayers,
+				nightNum: route.params.nightNum,
 			})
 		);
 	};
@@ -80,38 +82,51 @@ const GamePage = ({ route, navigation }) => {
 		}
 	};
 
+	const data = [
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
+	];
+
 	return (
-		<View style={Styles.container}>
-			<View style={Styles.viewArea}>
-				<View style={Styles.head}>
-					{/* <View style={Styles.rolePic}></View> */}
-					<Image
-						source={require("../../assets/adapt.png")}
-						style={Styles.rolePic}
-					/>
-					<Text>بعاتي</Text>
-				</View>
-				<View>
-					<View style={Styles.scrollArea}>
-						<View style={Styles.scrollArea_contentContainerStyle}>
-							<FlatList
-								data={joinedPlayers}
-								numColumns={4}
-								renderItem={Item}
-							/>
+		<ScrollView>
+			<View style={Styles.container}>
+				<View style={Styles.viewArea}>
+					<View style={Styles.head}>
+						{/* <View style={Styles.rolePic}></View> */}
+						<Image
+							source={require("../../assets/adapt.png")}
+							style={Styles.rolePic}
+						/>
+						<Text>بعاتي</Text>
+					</View>
+					<View>
+						<View style={Styles.scrollArea}>
+							<View
+								style={Styles.scrollArea_contentContainerStyle}
+							>
+								<FlatList
+									data={joinedPlayers}
+									numColumns={3}
+									renderItem={Item}
+								/>
+							</View>
 						</View>
 					</View>
-				</View>
-				<View>
-					<TouchableOpacity
-						style={Styles.loginBtn}
-						onPress={handleKill}
-					>
-						<Text style={Styles.loginText}>قتل</Text>
-					</TouchableOpacity>
+					<View>
+						<TouchableOpacity
+							style={Styles.loginBtn}
+							onPress={handleKill}
+						>
+							<Text style={Styles.loginText}>قتل</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
@@ -144,8 +159,9 @@ const Styles = StyleSheet.create({
 		// height: 319,
 		width: 290,
 		// flexDirection: "row",
-		overflow: "visible",
-		flex: 3,
+		overflow: "scroll",
+		alignItems: "center",
+		// flex: 1,
 	},
 	item: {
 		flex: 1,

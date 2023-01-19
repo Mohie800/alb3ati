@@ -37,20 +37,20 @@ function ViewRole({ route, navigation }) {
 				break;
 			case "2":
 				setRoleName("شيخ الدمازين");
-				setImage("../../assets/damazeen.png");
+				setImage(img[1]);
 				break;
 			case "3":
 				setRoleName("العمدة");
 
-				setImage("../../assets/al3omda.png");
+				setImage(img[2]);
 				break;
 			case "4":
 				setRoleName("ست الودع");
-				setImage("../../assets/eye-sw.png");
+				setImage(img[3]);
 				break;
 			case "5":
 				setRoleName("أبو جنزير");
-				setImage("../../assets/jenzeer.png");
+				setImage(img[4]);
 				break;
 			default:
 				"error";
@@ -76,6 +76,7 @@ function ViewRole({ route, navigation }) {
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
 				joinedPlayers,
+				nightNum: route.params.nightNum,
 			})
 		);
 	};
