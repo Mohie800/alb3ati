@@ -12,14 +12,6 @@ const VotesVictim = ({ route, navigation }) => {
 	const [alivePlayers, setAlivePlayers] = useState(null);
 	const [player, setPlayer] = useState(null);
 
-	// useEffect(() => {
-	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-	// 		e.preventDefault();
-	// 		// if (!nav) navigation.dispatch(e.data.action);
-	// 	});
-	// 	return unsubscribe;
-	// }, [navigation]);
-
 	const getGame = async () => {
 		const myId = await SecureStore.getItemAsync("id");
 		const { data } = await server
@@ -27,15 +19,8 @@ const VotesVictim = ({ route, navigation }) => {
 			.catch((e) => console.log(e));
 		setvotes(data.votes);
 		setJoinedPlayers(data.players);
-		// alert(data);
-		// console.log(data.players);
 		const findMe = findPlayer(data.players, myId);
 		setPlayer(findMe[0]);
-		// alert(JSON.stringify(data));
-		await server.post("/game/notready", {
-			gameId: route.params.roomId,
-			myId,
-		});
 	};
 
 	const findPlayer = (arr, myId) => {
@@ -59,7 +44,6 @@ const VotesVictim = ({ route, navigation }) => {
 			gameId: route.params.roomId,
 			playerId: playerId,
 		});
-		// alert(JSON.stringify(data));
 	};
 
 	useEffect(() => {
@@ -68,13 +52,11 @@ const VotesVictim = ({ route, navigation }) => {
 
 	useEffect(() => {
 		if (votes) {
-			//شوف دي بتطلع شنو وشوف شوف طول الارى والباقي ساهل
 			const victim = calVotes(votes);
 			if (victim.length == 1) {
 				setvictim(victim);
 				fuck(victim[0]);
 			}
-			// alert(victim);
 		}
 	}, [votes]);
 
@@ -129,10 +111,9 @@ const VotesVictim = ({ route, navigation }) => {
 				acc[val] = (acc[val] || 0) + 1;
 				return acc;
 			}, {});
-			// alert(gameState(hashmap));
 			const res = gameState(hashmap);
 			if (res === "continue") {
-				await server.post("/game/notready", {
+				await server.post("/game/notvoted", {
 					gameId: route.params.roomId,
 					myId,
 				});
@@ -150,7 +131,6 @@ const VotesVictim = ({ route, navigation }) => {
 			}
 			// alert(JSON.stringify(hashmap));
 		}
-		// alert(JSON.stringify(data.players));
 	};
 
 	const renderVictims = () => {
@@ -176,25 +156,21 @@ const VotesVictim = ({ route, navigation }) => {
 	return (
 		<View>
 			<View style={styles.container}>
-				<View>
-					{victim && (
-						<Text style={styles.text}>قامت القرية بقتل :</Text>
-					)}
-				</View>
-				<View>{victim ? renderVictims() : renderVotesEqual()}</View>
-				<View>
-					<TouchableOpacity
-						style={styles.loginBtn}
-						onPress={() =>
-							// navigation.navigate("vote", {
-							// 	joinedPlayers,
-							// 	roomId: route.params.roomId,
-							// })
-							gameResult()
-						}
-					>
-						<Text style={styles.loginText}>التالي</Text>
-					</TouchableOpacity>
+				<View style={styles.box}>
+					<View>
+						{victim && (
+							<Text style={styles.text}>قامت القرية بقتل :</Text>
+						)}
+					</View>
+					<View>{victim ? renderVictims() : renderVotesEqual()}</View>
+					<View>
+						<TouchableOpacity
+							style={styles.loginBtn}
+							onPress={() => gameResult()}
+						>
+							<Text style={styles.loginText}>التالي</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 		</View>
@@ -210,6 +186,7 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		padding: 20,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 	player: {
 		width: "50%",
@@ -227,6 +204,12 @@ const styles = StyleSheet.create({
 	loginText: {
 		color: "#fff",
 		fontFamily: "a-massir-ballpoint",
+	},
+	box: {
+		backgroundColor: "#1f1f1f",
+		opacity: 0.9,
+		borderRadius: 20,
+		padding: 20,
 	},
 });
 

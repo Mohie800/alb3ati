@@ -9,6 +9,7 @@ import {
 import JoinedPlayer from "../../components/JoinedPlayer";
 import { StackActions } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+import useStore from "../../store/store";
 
 const VillagersWins = ({ route, navigation }) => {
 	const [whoWin, setWhoWin] = useState(route.params.win);
@@ -17,6 +18,9 @@ const VillagersWins = ({ route, navigation }) => {
 	);
 	const [nav, setNav] = useState(true);
 	const [home, setHome] = useState(null);
+
+	const setRoomID = useStore((state) => state.setRoomId);
+	const setJoinedPlayers1 = useStore((state) => state.setJoinedPlayers);
 
 	const getOpen = async () => {
 		const open = await SecureStore.getItemAsync("open");
@@ -53,21 +57,19 @@ const VillagersWins = ({ route, navigation }) => {
 	};
 
 	const habdleNavigate = () => {
-		// saveToken("open", "on");
-		// setNav(false);
-		// // alert(nav);
-		// setHome("home");
-		navigation.dispatch(StackActions.replace("home"));
+		navigation.navigate("home");
+		setRoomID(null);
+		setJoinedPlayers1(null);
 	};
 
 	const renderPlayesList = () => {
 		return joinedPlayers.map((player) => {
 			return (
 				<View key={player.playerId} style={styles.JoinedCon}>
-					{/* <JoinedPlayer /> */}
-					<Text>{getRole(player.roleId)}</Text>
-					<Text>{` -- ${player.playerName} --`}</Text>
-					<View style={styles.pic}></View>
+					<Text style={{ color: "#e0e0e0" }}>
+						{getRole(player.roleId)}
+					</Text>
+					<JoinedPlayer name={player.playerName} />
 				</View>
 			);
 		});
@@ -75,15 +77,17 @@ const VillagersWins = ({ route, navigation }) => {
 	return (
 		<ScrollView>
 			<View style={styles.container}>
-				<Text style={styles.text}>{whoWin}</Text>
-				<View style={styles.listCon}>{renderPlayesList()}</View>
-				<View>
-					<TouchableOpacity
-						style={styles.loginBtn}
-						onPress={() => habdleNavigate()}
-					>
-						<Text style={styles.loginText}>خروج</Text>
-					</TouchableOpacity>
+				<View style={styles.box}>
+					<Text style={styles.text}>{whoWin}</Text>
+					<View style={styles.listCon}>{renderPlayesList()}</View>
+					<View>
+						<TouchableOpacity
+							style={styles.loginBtn}
+							onPress={() => habdleNavigate()}
+						>
+							<Text style={styles.loginText}>خروج</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 		</ScrollView>
@@ -100,8 +104,8 @@ const styles = StyleSheet.create({
 	JoinedCon: {
 		borderBottomColor: "#a0a0a0",
 		borderBottomWidth: 1,
-		padding: 20,
-		marginBottom: 40,
+		padding: 10,
+		marginBottom: 10,
 		width: "80%",
 		flexDirection: "row",
 		// flex: 2,
@@ -112,6 +116,7 @@ const styles = StyleSheet.create({
 		fontSize: 50,
 		padding: 20,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 	listCon: {
 		flex: 1,
@@ -139,6 +144,13 @@ const styles = StyleSheet.create({
 		backgroundColor: "#5c5b5b",
 		borderRadius: 50,
 		marginLeft: 10,
+	},
+	box: {
+		backgroundColor: "#1b1b1b",
+		padding: 20,
+		borderRadius: 20,
+		borderWidth: 1,
+		opacity: 0.9,
 	},
 });
 

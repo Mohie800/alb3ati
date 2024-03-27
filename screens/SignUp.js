@@ -9,6 +9,7 @@ import {
 	Button,
 	TouchableOpacity,
 } from "react-native";
+import { Icon } from "@rneui/themed";
 import server from "../api/server";
 
 export default function SignUp({ navigation }) {
@@ -33,7 +34,6 @@ export default function SignUp({ navigation }) {
 		} catch (e) {
 			setDisabled(false);
 			alert("حاول مرةاخرى");
-			// alert(e);
 		}
 	};
 
@@ -41,53 +41,58 @@ export default function SignUp({ navigation }) {
 		<View style={styles.container}>
 			<Image
 				style={styles.image}
-				source={require("../assets/adapt.png")}
+				source={require("../assets/adapt1.png")}
 			/>
 			<StatusBar style="auto" />
-			<View style={styles.inputView}>
-				<TextInput
-					style={styles.TextInput}
-					placeholder="الاسم"
-					placeholderTextColor="#003f5c"
-					onChangeText={(email) => setName(email)}
-				/>
-			</View>
+			<View style={styles.box}>
+				<View style={styles.inputView}>
+					<TextInput
+						style={styles.TextInput}
+						placeholder="الاسم"
+						placeholderTextColor="#003f5c"
+						onChangeText={(email) => setName(email)}
+					/>
+				</View>
 
-			<View style={styles.inputView}>
-				<TextInput
-					style={styles.TextInput}
-					placeholder="البريد الإلكتروني"
-					placeholderTextColor="#003f5c"
-					onChangeText={(email) => setEmail(email)}
-				/>
-			</View>
+				<View style={styles.inputView}>
+					<TextInput
+						style={styles.TextInput}
+						placeholder="البريد الإلكتروني"
+						placeholderTextColor="#003f5c"
+						onChangeText={(email) => setEmail(email)}
+					/>
+				</View>
 
-			<View style={styles.inputView}>
-				<TextInput
-					style={styles.TextInput}
-					placeholder="كلمة المرور"
-					placeholderTextColor="#003f5c"
-					secureTextEntry={true}
-					onChangeText={(password) => setPassword(password)}
-				/>
-			</View>
-			<View style={styles.inputView}>
-				<TextInput
-					style={styles.TextInput}
-					placeholder="تأكيد كلمة المرور"
-					placeholderTextColor="#003f5c"
-					secureTextEntry={true}
-					onChangeText={(password) => setConfirmPassword(password)}
-				/>
-			</View>
+				<View style={styles.inputView}>
+					<TextInput
+						style={styles.TextInput}
+						placeholder="كلمة المرور"
+						placeholderTextColor="#003f5c"
+						secureTextEntry={true}
+						onChangeText={(password) => setPassword(password)}
+					/>
+				</View>
+				<View style={styles.inputView}>
+					<TextInput
+						style={styles.TextInput}
+						placeholder="تأكيد كلمة المرور"
+						placeholderTextColor="#003f5c"
+						secureTextEntry={true}
+						onChangeText={(password) =>
+							setConfirmPassword(password)
+						}
+					/>
+				</View>
 
-			<TouchableOpacity
-				style={disabled ? styles.disabledloginBtn : styles.loginBtn}
-				disabled={disabled}
-				onPress={signUp}
-			>
-				<Text style={styles.loginText}>تسجيل مستخدم جديد</Text>
-			</TouchableOpacity>
+				<TouchableOpacity
+					style={disabled ? styles.disabledloginBtn : styles.loginBtn}
+					disabled={disabled}
+					onPress={signUp}
+				>
+					<Icon name="adduser" color="#fff" type="antdesign" />
+					<Text style={styles.loginText}>تسجيل مستخدم جديد</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -95,7 +100,7 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		// backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
 
 	inputView: {
 		display: "flex",
-		backgroundColor: "#7b8cf7",
+		backgroundColor: "#e0e0e0",
 		borderRadius: 30,
 		width: 250,
 		height: 45,
@@ -121,17 +126,9 @@ const styles = StyleSheet.create({
 	},
 
 	TextInput: {
-		// direction: "rtl",
 		height: 50,
-		// flex: 1,
 		padding: 10,
-		// width: 230,
-		// marginLeft: 20,
-		// justifyContent: "center",
-		// alignItems: "center",
-		color: "#ffffff",
-		// fontFamily: "a-massir-ballpoint",
-		// right: 10,
+		color: "#1b1b1b",
 	},
 
 	forgot_button: {
@@ -147,6 +144,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginTop: 40,
 		backgroundColor: "#1f30a0",
+		flexDirection: "row",
 	},
 	loginText: {
 		color: "#fff",
@@ -160,6 +158,15 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginTop: 40,
 		backgroundColor: "#6b6b6b",
+		flexDirection: "row",
 		// bottom: 20,
+	},
+	box: {
+		backgroundColor: "#1b1b1b",
+		padding: 20,
+		borderRadius: 20,
+		alignItems: "center",
+		justifyContent: "center",
+		borderWidth: 1,
 	},
 });

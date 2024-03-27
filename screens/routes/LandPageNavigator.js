@@ -1,4 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -24,27 +24,142 @@ import NewNight from "../the_game/NewNight";
 import OutOfTheGame from "../the_game/OutOfTheGame";
 import VillagersWins from "../the_game/VillagersWins";
 import CustomRoles from "../the_game/customRoles/CustomRoles";
+import Friends from "../friends/Friends";
+import Gest from "../Gest";
+import ChatRoom from "../ChatRoom";
+import ViewGame from "../the_game/ViewGame";
 
 const Stack = createNativeStackNavigator();
 
+const navTheme = {
+	...DefaultTheme,
+	colors: {
+		...DefaultTheme.colors,
+		background: "transparent",
+	},
+};
+
 const LandNavigator = () => {
 	return (
-		<NavigationContainer>
+		<NavigationContainer theme={navTheme}>
 			<Stack.Navigator initialRouteName="welcome">
-				<Stack.Screen name="welcome" component={First} />
+				<Stack.Screen
+					name="welcome"
+					component={First}
+					options={{
+						title: "",
+						headerBackVisible: false,
+						headerTransparent: true,
+					}}
+				/>
 				<Stack.Screen name="login" component={Login} />
+				<Stack.Screen
+					name="gest"
+					component={Gest}
+					options={{
+						title: "",
+						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+					}}
+				/>
 				<Stack.Screen name="signup" component={SignUp} />
-				<Stack.Screen name="home" component={Home} />
-				<Stack.Screen name="host" component={Host} />
+				<Stack.Screen
+					name="home"
+					component={Home}
+					options={{
+						title: "",
+						// headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
+				<Stack.Screen
+					name="friends"
+					component={Friends}
+					options={{
+						title: "",
+						// headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
+				<Stack.Screen
+					name="host"
+					component={Host}
+					options={{
+						title: "",
+						// headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
 				<Stack.Screen name="game" component={GamePage} />
-				<Stack.Screen name="lobby" component={Looby} />
-				<Stack.Screen name="customRoles" component={CustomRoles} />
+				<Stack.Screen
+					name="lobby"
+					component={Looby}
+					options={{
+						title: "",
+						// headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
+				<Stack.Screen
+					name="customRoles"
+					component={CustomRoles}
+					options={{
+						title: "",
+						// headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
 				<Stack.Screen
 					name="ready"
 					component={Ready}
 					options={{
-						title: "انتظار",
+						title: "",
 						headerBackVisible: false,
+						headerTransparent: true,
+					}}
+				/>
+				<Stack.Screen
+					name="chat"
+					component={ChatRoom}
+					options={{
+						title: "",
+						headerBackVisible: false,
+						headerTransparent: true,
 					}}
 				/>
 				<Stack.Screen
@@ -53,6 +168,7 @@ const LandNavigator = () => {
 					options={{
 						title: "",
 						headerBackVisible: false,
+						headerTransparent: true,
 					}}
 				/>
 				<Stack.Screen
@@ -61,6 +177,13 @@ const LandNavigator = () => {
 					options={{
 						title: "التصويت",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
@@ -69,15 +192,43 @@ const LandNavigator = () => {
 					options={{
 						title: "انتظار",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
 					}}
 				/>
-				<Stack.Screen name="victim" component={VotesVictim} />
+				<Stack.Screen
+					name="victim"
+					component={VotesVictim}
+					options={{
+						title: "",
+						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
 				<Stack.Screen
 					name="viewrole"
 					component={ViewRole}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
@@ -87,6 +238,10 @@ const LandNavigator = () => {
 						title: "ليلة جديدة",
 						headerBackVisible: false,
 						headerLeft: () => null,
+
+						headerTransparent: true,
+						animation: "fade",
+						animationDuration: 1000,
 					}}
 				/>
 				<Stack.Screen
@@ -95,6 +250,13 @@ const LandNavigator = () => {
 					options={{
 						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
@@ -103,46 +265,103 @@ const LandNavigator = () => {
 					options={{
 						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
+					}}
+				/>
+				<Stack.Screen
+					name="viewgame"
+					component={ViewGame}
+					options={{
+						title: "",
+						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
 					name="role1"
 					component={role1}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
 					name="role2"
 					component={role2}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
 					name="role3"
 					component={role3}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
 					name="role4"
 					component={role4}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 				<Stack.Screen
 					name="role5"
 					component={role5}
 					options={{
-						title: "دور اللاعب",
+						title: "",
 						headerBackVisible: false,
+						// headerTransparent: true,
+						headerStyle: {
+							backgroundColor: "#fa5c5c00",
+							color: "#e0e0e0",
+						},
+						headerShadowVisible: false,
+						headerTintColor: "#e0e0e0",
 					}}
 				/>
 			</Stack.Navigator>

@@ -1,15 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
 import { useInterval } from "../../common";
 
 import {
 	StyleSheet,
 	Text,
 	View,
-	Image,
 	TextInput,
-	Button,
 	TouchableOpacity,
 	ScrollView,
 	FlatList,
@@ -17,76 +14,49 @@ import {
 import JoinedPlayer from "../../components/JoinedPlayer";
 import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
-import { StackActions } from "@react-navigation/native";
+import useStore from "../../store/store";
 
-export default function Host({ navigation }) {
+export default function Host({ route, navigation }) {
 	const [isConnected, setIsConnected] = useState(null);
 	const [lastPong, setLastPong] = useState(null);
 	const [roomId, setRoomId] = useState(null);
-	const [joinedPlayers, setJoinedPlayers] = useState([]);
 	const [itemData, setItemData] = useState([]);
 	const [player, setPlayer] = useState({});
 	const [MyId, setMyId] = useState(null);
 	const [startGame, setStartGame] = useState(null);
+	const [nonDisplay, setNonDispay] = useState(false);
 
-	// const socket = io("https://eager-ruby-pinafore.cyclic.app"); //.connect("https://eager-ruby-pinafore.cyclic.app");
+	const setRoomID = useStore((state) => state.setRoomId);
+	const joinedPlayers = useStore((state) => state.joinedPlayers);
+	const setJoinedPlayers = useStore((state) => state.setJoinedPlayers);
+	const setUser = useStore((state) => state.setPlayerObj);
 
-	// useEffect(() => {
-	// 	socket.on("connect", () => {
-	// 		alert("zoot");
-	// 		setIsConnected(true);
-	// 	});
-
-	// 	socket.on("disconnect", () => {
-	// 		setIsConnected(false);
-	// 	});
-	// 	socket.emit("create", roomId);
-	// 	socket.on("joined", (data) => {
-	// 		alert(data);
-	// 	});
-	// 	return () => {
-	// 		socket.off("connect");
-	// 		socket.off("disconnect");
-	// 	};
-	// }, []);
-
-	// useEffect(() => {
-	// 	socket.on("joined", (data) => {
-	// 		console.log(data);
-	// 		alert(data);
-	// 	});
-	// }, [socket]);
-	const role = () => {
-		const roleId = Math.random();
-		if (roleId < 0.08) {
-			return 5;
-		} else if (roleId < 0.2) {
-			return 4;
-		} else if (roleId < 0.4) {
-			return 2;
-		} else if (roleId < 0.7) {
-			return 3;
-		} else {
-			return 1;
+	useEffect(() => {
+		if (route.params.gameId) {
+			setRoomId(route.params?.gameId);
+			setLastPong(true);
+			setNonDispay(true);
+			setRoomID(route.params.gameId);
 		}
-	};
+	}, []);
+
+	useEffect(() => {
+		setJoinedPlayers([]);
+	}, []);
 
 	const handleCreateGame = async () => {
 		const playerName = await SecureStore.getItemAsync("name");
 		const id = await SecureStore.getItemAsync("id");
-
-		// alert(playerName);
 		const game = await server.post("/game/join", {
 			gameId: roomId,
 			playerName,
 			playerId: id,
-			roleId: role(),
 		});
-		if (game.data) alert(game.data);
-	};
-
-	const saveToken = async (key, value) => {
-		await SecureStore.setItemAsync(key, value);
+		if (game.data) {
+			setLastPong(true);
+			alert(game.data);
+			setRoomID(roomId);
+		}
 	};
 
 	const handleStartGame = async () => {
@@ -95,25 +65,25 @@ export default function Host({ navigation }) {
 			alert("غير مسموح");
 			return;
 		}
-		// saveToken("my_role", player.roleId);
 
-		navigation.navigate(`new`, {
+		navigation.navigate(`chat`, {
 			joinedPlayers,
 			roomId,
 			MyId: myId,
 			player: player,
 		});
-		// console.log(player);
 	};
 
 	const getGame = async () => {
 		const id = await SecureStore.getItemAsync("id");
+		if (!lastPong) return;
 		const { data } = await server
 			.get(`/game/${roomId}`)
 			.catch((e) => console.log(e));
 		setJoinedPlayers(data.players);
 		const me = data.players.filter((p) => p.playerId === id);
 		setPlayer(me[0]);
+		setUser(me[0]);
 		setMyId(id);
 		setStartGame(data.startGame);
 	};
@@ -135,21 +105,24 @@ export default function Host({ navigation }) {
 		}
 	}, [startGame]);
 
+	const setManualRoomId = (e) => {
+		setRoomId(e);
+		setRoomID(e);
+	};
+
 	return (
 		<ScrollView>
 			<View style={styles.container}>
-				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
-
 				<StatusBar style="auto" />
 				<View>
-					<View style={styles.rect}>
+					<View style={nonDisplay ? styles.non : styles.rect}>
 						<View style={styles.loremIpsum2Row}>
 							<Text style={styles.text1}>
 								أدخل رمز الاستضافة :
 							</Text>
 							<TextInput
 								style={styles.text}
-								onChangeText={(e) => setRoomId(e)}
+								onChangeText={(e) => setManualRoomId(e)}
 							/>
 						</View>
 						<TouchableOpacity
@@ -184,7 +157,6 @@ export default function Host({ navigation }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "space-between",
 	},
@@ -208,10 +180,7 @@ const styles = StyleSheet.create({
 	text1: {
 		paddingTop: 10,
 		height: 40,
-		// borderColor: "#ffffff",
-		// borderWidth: 2,
 		width: "90%",
-		// borderRadius: 25,
 		color: "#fff",
 		width: 150,
 		padding: 10,
@@ -242,16 +211,12 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "column",
-		// marginLeft: 53,
-		// marginLeft: 53,
 	},
 	loremIpsum2Row: {
 		height: 17,
 		flexDirection: "column",
 		flex: 1,
 		marginRight: 15,
-		// marginLeft: 64,
-		// marginTop: 30,
 		justifyContent: "center",
 		alignItems: "center",
 		color: "#fff",
@@ -262,12 +227,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#7b8cf7",
 		borderRadius: 22,
 		marginTop: 40,
-		// marginLeft: 53
 	},
 	scrollArea_contentContainerStyle: {
-		// height: 319,
 		width: 269,
-		// flexDirection: "row",
 		overflow: "visible",
 		flex: 3,
 	},
@@ -275,11 +237,18 @@ const styles = StyleSheet.create({
 		flex: 1,
 		maxWidth: "25%", // 100% devided by the number of rows you want
 		alignItems: "center",
-
-		// my visual styles; not important for the grid
 		padding: 10,
-		// backgroundColor: "rgba(249, 180, 45, 0.25)",
-		// borderWidth: 1.5,
-		// borderColor: "#fff",
+	},
+	non: {
+		width: 269,
+		height: 195,
+		backgroundColor: "#7b8cf7",
+		borderRadius: 15,
+		flexDirection: "row",
+		marginTop: 30,
+		justifyContent: "center",
+		alignItems: "center",
+		flexDirection: "column",
+		display: "none",
 	},
 });

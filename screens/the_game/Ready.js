@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import Timer from "../../components/Timer";
+import { Icon } from "@rneui/themed";
 
 import {
 	StyleSheet,
@@ -28,6 +29,7 @@ export default function Host({ route, navigation }) {
 	const [joinedPlayers, setJoinedPlayers] = useState([]);
 	const [itemData, setItemData] = useState([]);
 	const [ready, setReady] = useState(true);
+	const [notReady, setNotReady] = useState(true);
 	const [stop, setStop] = useState(true);
 
 	// useEffect(() => {
@@ -40,6 +42,7 @@ export default function Host({ route, navigation }) {
 
 	useEffect(() => {
 		setReady(true);
+		getGame();
 	}, []);
 
 	const handleTimeOut = () => {
@@ -73,12 +76,24 @@ export default function Host({ route, navigation }) {
 		);
 	};
 
+	useEffect(() => {
+		setTimeout(() => {
+			setNotReady(ready);
+		}, 3000);
+	}, [ready]);
+	useEffect(() => {
+		setTimeout(() => {
+			if (!ready) {
+				assignRoles();
+			}
+		});
+	}, [notReady]);
+
 	const getGame = async () => {
 		const { data } = await server
 			.get(`/game/${roomId}`)
 			.catch((e) => console.log(e));
 		setJoinedPlayers(data.players);
-		// console.log(data.players);
 		if (data) setLastPong(false);
 	};
 	useInterval(() => getGame(), 3000);
@@ -88,18 +103,26 @@ export default function Host({ route, navigation }) {
 			return (
 				<View style={styles.item}>
 					<JoinedPlayer name={item.playerName} />
-					{item.isReady && <View style={styles.check}></View>}
+					{item.isReady && (
+						<View style={styles.check}>
+							<Icon
+								name="check"
+								type="fontawesome"
+								color="#06ff1b"
+							></Icon>
+						</View>
+					)}
 				</View>
 			);
 		}
 	};
 
 	return (
-		<ScrollView>
+		<ScrollView style={{ flex: 1 }}>
 			<View style={styles.container}>
 				{/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
 				<Spinner visible={lastPong} textContent={"Loading..."} />
-				<StatusBar style="auto" />
+				<StatusBar style="inverted" />
 				<View>
 					<View style={styles.rect}>
 						<View style={styles.loremIpsum2Row}>
@@ -121,7 +144,7 @@ export default function Host({ route, navigation }) {
 				<TouchableOpacity
 					style={ready ? styles.disabledloginBtn : styles.loginBtn}
 					onPress={() => assignRoles()}
-					disabled={ready}
+					// disabled={ready}
 				>
 					<Text style={styles.loginText}>جاهز</Text>
 				</TouchableOpacity>
@@ -132,10 +155,11 @@ export default function Host({ route, navigation }) {
 
 const styles = StyleSheet.create({
 	container: {
+		top: 20,
 		flex: 1,
-		backgroundColor: "#fff",
+		// backgroundColor: "#fff",
 		alignItems: "center",
-		justifyContent: "space-between",
+		justifyContent: "center",
 	},
 
 	image: {
@@ -151,13 +175,13 @@ const styles = StyleSheet.create({
 	},
 	check: {
 		position: "absolute",
-		height: "9%",
-		width: "20%",
-		backgroundColor: "green",
-		bottom: 50,
+		// height: "9%",
+		// width: "20%",
+		// backgroundColor: "green",
+		bottom: "50%",
 		borderRadius: 50,
-		right: 20,
-		alignSelf: "flex-end",
+		// right: "30%",
+		alignSelf: "center",
 	},
 	loginBtn: {
 		width: 200,

@@ -37,13 +37,9 @@ const GamePage = ({ route, navigation }) => {
 			.catch((e) => console.log(e));
 		// setvotes(data.votes);
 		setJoinedPlayers(data.players);
-		// alert(data);
-		// console.log(data.players);
 		const findMe = findPlayer(data.players, myId);
 		setPlayer(findMe[0]);
-		// alert(JSON.stringify(findMe));
 		setloading(!loading);
-		// alert(player);
 	};
 
 	const findPlayer = (arr, myId) => {
@@ -66,10 +62,8 @@ const GamePage = ({ route, navigation }) => {
 			StackActions.replace("votesready", {
 				roomId: route.params.roomId,
 				nightNum: route.params.nightNum,
-				// joinedPlayers,
 			})
 		);
-		// alert(JSON.stringify(data));
 	};
 
 	useEffect(() => {
@@ -90,7 +84,6 @@ const GamePage = ({ route, navigation }) => {
 
 	useEffect(() => {
 		if (player) {
-			// alert(JSON.stringify(player));
 			out();
 		}
 	}, [player]);
@@ -122,10 +115,10 @@ const GamePage = ({ route, navigation }) => {
 			<View style={Styles.container}>
 				<Spinner visible={loading} textContent={"Loading..."} />
 				<View style={Styles.viewArea}>
-					<View style={Styles.head}>
+					{/* <View style={Styles.head}>
 						<View style={Styles.rolePic}></View>
 						<Text>{name}</Text>
-					</View>
+					</View> */}
 					<View>
 						<View style={Styles.scrollArea}>
 							<View

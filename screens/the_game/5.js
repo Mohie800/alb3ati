@@ -18,18 +18,16 @@ const GamePage = ({ route, navigation }) => {
 		route.params.joinedPlayers
 	);
 	const [target, setTarget] = useState(null);
+	const [disabled, setDisabled] = useState(true);
 
-	// useEffect(() => {
-	// 	const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-	// 		e.preventDefault();
-	// 		// if (!nav) navigation.dispatch(e.data.action);
-	// 	});
-	// 	return unsubscribe;
-	// }, [navigation]);
+	const handleSelect = (playerId) => {
+		setTarget(playerId);
+		setDisabled(false);
+	};
 	const Item = ({ item }) => {
 		if (item.playerId != route.params.MyId && item.inGame) {
 			return (
-				<TouchableOpacity onPress={() => setTarget(item.playerId)}>
+				<TouchableOpacity onPress={() => handleSelect(item.playerId)}>
 					<View
 						style={
 							item.playerId == target
@@ -52,7 +50,7 @@ const GamePage = ({ route, navigation }) => {
 			myId,
 			nightNum: route.params.nightNum,
 		});
-		// alert(JSON.stringify(data));
+
 		navigation.dispatch(
 			StackActions.replace("ready", {
 				roomId: route.params.roomId,
@@ -67,13 +65,13 @@ const GamePage = ({ route, navigation }) => {
 			<View style={Styles.container}>
 				<View style={Styles.viewArea}>
 					<View style={Styles.head}>
-						<View style={Styles.imgCont}>
+						<View>
 							<Image
-								source={require("../../assets/jenzeer.jpg")}
+								source={require("../../assets/jenzeer2.png")}
 								style={Styles.rolePic}
 							/>
 						</View>
-						<Text>أبو جنزير</Text>
+						<Text style={Styles.text}>أبو جنزير</Text>
 					</View>
 					<View>
 						<View style={Styles.scrollArea}>
@@ -90,8 +88,13 @@ const GamePage = ({ route, navigation }) => {
 					</View>
 					<View>
 						<TouchableOpacity
-							style={Styles.loginBtn}
+							style={
+								disabled
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
 							onPress={handleKill}
+							disabled={disabled}
 						>
 							<Text style={Styles.loginText}>قتل</Text>
 						</TouchableOpacity>
@@ -181,12 +184,29 @@ const Styles = StyleSheet.create({
 		backgroundColor: "#1f30a0",
 		bottom: 20,
 	},
+	disabledloginBtn: {
+		width: 70,
+		borderRadius: 25,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		marginTop: 40,
+		bottom: 20,
+		marginHorizontal: 10,
+		backgroundColor: "#6b6b6b",
+	},
 	loginText: {
 		color: "#fff",
 	},
 	viewArea: {
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	text: {
+		fontSize: 20,
+		padding: 5,
+		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 });
 

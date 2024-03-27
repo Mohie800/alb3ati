@@ -5,6 +5,7 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
+	SafeAreaView,
 } from "react-native";
 import server from "../../api/server";
 import JoinedPlayer from "../../components/JoinedPlayer";
@@ -28,8 +29,6 @@ const Victims = ({ route, navigation }) => {
 	// 	});
 	// 	return unsubscribe;
 	// }, [navigation]);
-
-	// useEffect(() => alert(route.params), []);
 
 	const getGame = async () => {
 		const { data } = await server
@@ -110,7 +109,7 @@ const Victims = ({ route, navigation }) => {
 			const res = gameState(hashmap);
 			if (res === "continue") {
 				navigation.dispatch(
-					StackActions.replace("vote", {
+					StackActions.replace("chat", {
 						joinedPlayers,
 						roomId: route.params.roomId,
 						MyId: myId,
@@ -205,36 +204,48 @@ const Victims = ({ route, navigation }) => {
 	};
 
 	return (
-		<ScrollView>
-			<View style={styles.container}>
-				<View>
-					<Text style={styles.text}>ضحايا اليوم</Text>
+		<SafeAreaView style={{ flex: 1 }}>
+			<ScrollView>
+				<View style={styles.container}>
+					<View>
+						<Text style={styles.text}>ضحايا اليوم</Text>
+					</View>
+					<View>{joinedPlayers && renderVictims()}</View>
+					{noD.length == 0 && noDie()}
+					{jenVic.length != 0 && renderJenzeerVictim()}
+					<View>
+						<TouchableOpacity
+							style={styles.loginBtn}
+							onPress={() => handleNext()}
+						>
+							<Text style={styles.loginText}>التالي</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-				<View>{joinedPlayers && renderVictims()}</View>
-				{noD.length == 0 && noDie()}
-				{jenVic.length != 0 && renderJenzeerVictim()}
-				<View>
-					<TouchableOpacity
-						style={styles.loginBtn}
-						onPress={() => handleNext()}
-					>
-						<Text style={styles.loginText}>التالي</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</ScrollView>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#fffff",
+		flex: 1,
 		alignItems: "center",
+		justifyContent: "center",
+
+		backgroundColor: "#1b1b1b",
+		padding: 20,
+		borderRadius: 20,
+		borderWidth: 1,
+		opacity: 0.9,
+		top: 30,
+		margin: 20,
 	},
 	text: {
 		fontSize: 30,
 		padding: 20,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 	textCont: {
 		width: "100%",
@@ -252,7 +263,7 @@ const styles = StyleSheet.create({
 		width: "50%",
 	},
 	player2: {
-		width: "70%",
+		width: "90%",
 		backgroundColor: "#df6969",
 		borderRadius: 25,
 	},
@@ -269,6 +280,14 @@ const styles = StyleSheet.create({
 	loginText: {
 		color: "#fff",
 		fontFamily: "a-massir-ballpoint",
+	},
+	box: {
+		backgroundColor: "#1b1b1b",
+		padding: 20,
+		borderRadius: 20,
+		borderWidth: 1,
+		opacity: 0.9,
+		top: 30,
 	},
 });
 

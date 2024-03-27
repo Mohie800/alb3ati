@@ -6,6 +6,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	Image,
+	StatusBar,
 } from "react-native";
 import JoinedPlayer from "../../components/JoinedPlayer";
 import { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ const GamePage = ({ route, navigation }) => {
 	const [roomId, setRoomId] = useState(route.params.roomId);
 	const [player, setPlayer] = useState({});
 	const [loading, setloading] = useState(true);
+	const [disabled, setDisabled] = useState(true);
 
 	// useEffect(
 	// 	() =>
@@ -97,10 +99,15 @@ const GamePage = ({ route, navigation }) => {
 		getGame();
 	}, []);
 
+	const handleSelect = (playerId) => {
+		setTarget(playerId);
+		setDisabled(false);
+	};
+
 	const Item = ({ item }) => {
 		if (item.playerId !== route.params.MyId && item.inGame) {
 			return (
-				<TouchableOpacity onPress={() => setTarget(item.playerId)}>
+				<TouchableOpacity onPress={() => handleSelect(item.playerId)}>
 					<View
 						style={
 							item.playerId == target
@@ -117,12 +124,13 @@ const GamePage = ({ route, navigation }) => {
 
 	return (
 		<ScrollView>
+			<StatusBar barStyle={"light-content"} />
 			<View style={Styles.container}>
 				<Spinner visible={loading} textContent={"Loading..."} />
 				<View style={Styles.viewArea}>
 					<View style={Styles.head}>
 						<Image
-							source={require("../../assets/damazeen.png")}
+							source={require("../../assets/damazeen2.png")}
 							style={Styles.rolePic}
 						/>
 						<Text style={Styles.text}>شيخ الدمازين</Text>
@@ -148,18 +156,18 @@ const GamePage = ({ route, navigation }) => {
 									: Styles.loginBtn
 							}
 							onPress={handleProtectAll}
-							disabled={player.damazeenProtect}
+							disabled={Boolean(player.damazeenProtect)}
 						>
 							<Text style={Styles.loginText}>حجاب</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={
-								player.damazeenKill
+								!player.damazeenKill && disabled
 									? Styles.disabledloginBtn
 									: Styles.loginBtn
 							}
 							onPress={handleKill}
-							disabled={player.damazeenKill}
+							disabled={Boolean(!player.damazeenKill && disabled)}
 						>
 							<Text style={Styles.loginText}>كجور</Text>
 						</TouchableOpacity>
@@ -182,7 +190,7 @@ const Styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	rolePic: {
-		// backgroundColor: "#945151",
+		backgroundColor: "#e0e0e0",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -270,6 +278,7 @@ const Styles = StyleSheet.create({
 		fontSize: 20,
 		padding: 5,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 });
 

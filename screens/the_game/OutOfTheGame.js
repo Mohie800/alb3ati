@@ -2,14 +2,6 @@ import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useEffect } from "react";
 
 const OutOfTheGame = ({ navigation }) => {
-	// useEffect(
-	// 	() =>
-	// 		navigation.addListener("beforeRemove", (e) => {
-	// 			e.preventDefault();
-	// 		}),
-	// 	[navigation]
-	// );
-
 	return (
 		<View style={styles.container}>
 			<View>
@@ -21,6 +13,12 @@ const OutOfTheGame = ({ navigation }) => {
 					style={styles.loginBtn}
 				>
 					<Text style={styles.loginText}>خروج</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => navigation.navigate("viewgame")}
+					style={styles.loginBtn}
+				>
+					<Text style={styles.loginText}>مراقبة اللعبة</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -38,6 +36,7 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		padding: 20,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 	loginBtn: {
 		width: 200,

@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import {
@@ -8,84 +7,63 @@ import {
 	View,
 	Image,
 	TextInput,
-	Button,
 	TouchableOpacity,
 } from "react-native";
-import { Icon } from "@rneui/themed";
-import server from "../api/server";
 import useStore from "../store/store";
 
-export default function Login({ navigation }) {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+export default function Gest({ navigation }) {
+	const [name, setName] = useState("");
+	const [playerId, setPlayerId] = useState(
+		Math.random().toString(36).substr(2, 20)
+	);
 	const [disabled, setDisabled] = useState(false);
 
 	const saveToken = async (key, value) => {
 		await SecureStore.setItemAsync(key, value);
 	};
 
-	const setUser = useStore((state) => state.setUser);
+	const isUser = useStore((state) => state.isUser);
 	const setUserObj = useStore((state) => state.setUserObj);
+	// aler/t(JSON.stringify(isUser));
 
 	const handleLogin = async () => {
-		const json = { email: email.toLowerCase().trim(), password };
-
-		try {
-			setDisabled(true);
-			const { data } = await server.post("/login", json);
-			saveToken("token", data.token);
-			saveToken("name", data.name);
-			saveToken("id", data.id);
-			setUser();
-			setUserObj({ userName: data.name, userId: data.id });
-			if (data.token) {
-				setDisabled(false);
-				navigation.navigate("home", { isUser: true });
-			}
-		} catch (e) {
+		setDisabled(true);
+		saveToken("name", name);
+		saveToken("id", playerId);
+		setUserObj({ userName: name, userId: playerId });
+		if (name) {
 			setDisabled(false);
-			alert("حاول مرةاخرى");
+			navigation.navigate("home", { isUser: false });
+		} else {
+			setDisabled(false);
+			alert("اكتب الاسم");
 		}
 	};
 
 	return (
 		<View style={styles.container}>
-			<Image
-				style={styles.image}
-				source={require("../assets/adapt1.png")}
-			/>
-
-			<StatusBar style="auto" />
+			<View>
+				<Image
+					style={styles.image}
+					source={require("../assets/adapt1.png")}
+				/>
+			</View>
 			<View style={styles.box}>
+				<StatusBar style="auto" />
 				<View style={styles.inputView}>
 					<TextInput
 						style={styles.TextInput}
-						placeholder="البريد الإلكتروني"
+						placeholder="الاسم"
 						placeholderTextColor="#1b1b1b"
-						onChangeText={(email) => setEmail(email)}
+						onChangeText={(name) => setName(name)}
 					/>
 				</View>
-
-				<View style={styles.inputView}>
-					<TextInput
-						style={styles.TextInput}
-						placeholder="كلمة المرور"
-						placeholderTextColor="#1b1b1b"
-						secureTextEntry={true}
-						onChangeText={(password) => setPassword(password)}
-					/>
-				</View>
-
-				{/* <TouchableOpacity>
-					<Text style={styles.forgot_button}>Forgot Password?</Text>
-				</TouchableOpacity> */}
 
 				<TouchableOpacity
 					style={disabled ? styles.disabledloginBtn : styles.loginBtn}
 					disabled={disabled}
 					onPress={handleLogin}
 				>
-					<Icon name="login" type="antdesign" color="#ffffff" />
 					<Text style={styles.loginText}>تسجيل دخول</Text>
 				</TouchableOpacity>
 			</View>
@@ -108,10 +86,20 @@ const styles = StyleSheet.create({
 		borderRadius: 25,
 	},
 
+	imgCont: {
+		backgroundColor: "#e0e0e0",
+		marginBottom: 10,
+		borderRadius: 10,
+		height: 100,
+		width: 120,
+		alignItems: "center",
+		// justifyContent: "center",
+	},
+
 	inputView: {
 		display: "flex",
 		backgroundColor: "#e0e0e0",
-		borderRadius: 30,
+		borderRadius: 10,
 		width: 250,
 		height: 45,
 		marginBottom: 20,
@@ -127,7 +115,6 @@ const styles = StyleSheet.create({
 		// width: 210,
 		width: "100%",
 		textAlign: "center",
-		paddingHorizontal: 20,
 
 		// marginLeft: 20,
 		justifyContent: "center",
@@ -149,7 +136,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		marginTop: 40,
 		backgroundColor: "#1f30a0",
-		flexDirection: "row",
 	},
 	loginText: {
 		color: "#fff",
@@ -162,7 +148,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		marginTop: 40,
-		flexDirection: "row",
 		backgroundColor: "#6b6b6b",
 		// bottom: 20,
 	},

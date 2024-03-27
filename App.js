@@ -1,12 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+	Button,
+	StyleSheet,
+	Text,
+	View,
+	ImageBackground,
+	SafeAreaView,
+} from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import First from "./screens/First";
 import Login from "./screens/Login";
 import LandNavigator from "./screens/routes/LandPageNavigator";
 import SignUp from "./screens/SignUp";
 import Splash from "./components/Splash";
+import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
 export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false);
@@ -45,17 +53,26 @@ export default function App() {
 	}
 
 	return (
-		<View style={styles.container} onLayou={onLayoutRootView}>
-			<Splash />
-			{/* <LandNavigator /> */}
-		</View>
+		<SafeAreaView style={{ flex: 1 }}>
+			{/* <ExpoStatusBar hidden /> */}
+			<ImageBackground
+				source={require("./assets/background.png")}
+				style={{ flex: 1 }}
+			>
+				<StatusBar style="light" />
+				{/* <View style={styles.container} onLayou={onLayoutRootView}>
+			</View> */}
+				<Splash />
+				{/* <LandNavigator /> */}
+			</ImageBackground>
+		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		// backgroundColor: "#fff",
 		// alignItems: "center",
 		justifyContent: "center",
 	},

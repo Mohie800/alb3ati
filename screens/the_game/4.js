@@ -19,6 +19,7 @@ const GamePage = ({ route, navigation }) => {
 	const [target, setTarget] = useState(null);
 	const [exposed, setExposed] = useState(null);
 	const [playerName, setPlayerName] = useState(null);
+	const [disabled, setDisabled] = useState(true);
 
 	// useEffect(
 	// 	() =>
@@ -29,7 +30,6 @@ const GamePage = ({ route, navigation }) => {
 	// );
 
 	const exposeRole = async () => {
-		// alert(exposed);
 		navigation.dispatch(
 			StackActions.replace("viewrole", {
 				roleId: exposed,
@@ -44,6 +44,7 @@ const GamePage = ({ route, navigation }) => {
 		setTarget(item.playerId);
 		setExposed(item.roleId);
 		setPlayerName(item.playerName);
+		setDisabled(false);
 	};
 
 	const Item = ({ item }) => {
@@ -70,7 +71,7 @@ const GamePage = ({ route, navigation }) => {
 				<View style={Styles.viewArea}>
 					<View style={Styles.head}>
 						<Image
-							source={require("../../assets/eye-sw.png")}
+							source={require("../../assets/eye-sw2.png")}
 							style={Styles.rolePic}
 						/>
 						<Text style={Styles.text}>ست الودع</Text>
@@ -90,7 +91,11 @@ const GamePage = ({ route, navigation }) => {
 					</View>
 					<View>
 						<TouchableOpacity
-							style={Styles.loginBtn}
+							style={
+								disabled
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
 							onPress={exposeRole}
 						>
 							<Text style={Styles.loginText}>اكشف الدور</Text>
@@ -108,7 +113,7 @@ const Styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	rolePic: {
-		// backgroundColor: "#945151",
+		backgroundColor: "#e0e0e0",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -170,6 +175,16 @@ const Styles = StyleSheet.create({
 		backgroundColor: "#1f30a0",
 		bottom: 20,
 	},
+	disabledloginBtn: {
+		width: 200,
+		borderRadius: 25,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		marginTop: 40,
+		backgroundColor: "#6b6b6b",
+		bottom: 20,
+	},
 	loginText: {
 		color: "#fff",
 	},
@@ -181,6 +196,7 @@ const Styles = StyleSheet.create({
 		fontSize: 20,
 		padding: 1,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 });
 

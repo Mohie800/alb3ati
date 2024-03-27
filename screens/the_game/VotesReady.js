@@ -19,6 +19,7 @@ import server from "../../api/server";
 import * as SecureStore from "expo-secure-store";
 import { useInterval } from "../../common";
 import Timer from "../../components/Timer";
+import { Icon } from "@rneui/themed";
 
 export default function Host({ route, navigation }) {
 	const [isConnected, setIsConnected] = useState(null);
@@ -27,6 +28,7 @@ export default function Host({ route, navigation }) {
 	const [joinedPlayers, setJoinedPlayers] = useState([]);
 	const [itemData, setItemData] = useState([]);
 	const [ready, setReady] = useState(true);
+	const [notReady, setNotReady] = useState(true);
 	const [stop, setStop] = useState(true);
 
 	// useEffect(() => {
@@ -39,6 +41,7 @@ export default function Host({ route, navigation }) {
 
 	useEffect(() => {
 		setReady(true);
+		getGame();
 	}, []);
 
 	const handleTimeOut = () => {
@@ -50,7 +53,7 @@ export default function Host({ route, navigation }) {
 		const inGamePlayers = joinedPlayers.filter(
 			(player) => player.inGame === true
 		);
-		const allEqual = (arr) => arr.every((v) => v.isReady === true);
+		const allEqual = (arr) => arr.every((v) => v.isVoted === true);
 		const r = allEqual(inGamePlayers);
 		if (stop) setReady(true);
 		if (r) {
@@ -74,6 +77,19 @@ export default function Host({ route, navigation }) {
 		);
 	};
 
+	useEffect(() => {
+		setTimeout(() => {
+			setNotReady(ready);
+		}, 3000);
+	}, [ready]);
+	useEffect(() => {
+		setTimeout(() => {
+			if (!ready) {
+				assignRoles();
+			}
+		}, 500);
+	}, [notReady]);
+
 	const getGame = async () => {
 		const { data } = await server
 			.get(`/game/${roomId}`)
@@ -89,7 +105,16 @@ export default function Host({ route, navigation }) {
 			return (
 				<View style={styles.item}>
 					<JoinedPlayer name={item.playerName} />
-					{item.isReady && <View style={styles.check}></View>}
+					{item.isVoted && (
+						<View style={styles.check}>
+							<Icon
+								name="check"
+								type="fontawesome"
+								// style={styles.check1}
+								color="#06ff1b"
+							></Icon>
+						</View>
+					)}
 				</View>
 			);
 		}
@@ -123,7 +148,7 @@ export default function Host({ route, navigation }) {
 				<TouchableOpacity
 					style={ready ? styles.disabledloginBtn : styles.loginBtn}
 					onPress={() => assignRoles()}
-					disabled={ready}
+					// disabled={ready}
 				>
 					<Text style={styles.loginText}>جاهز</Text>
 				</TouchableOpacity>
@@ -135,7 +160,7 @@ export default function Host({ route, navigation }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		// backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "space-between",
 	},
@@ -151,15 +176,25 @@ const styles = StyleSheet.create({
 		fontFamily: "a-massir-ballpoint",
 		fontSize: 20,
 	},
+	// check: {
+	// 	position: "absolute",
+	// 	height: "9%",
+	// 	width: "20%",
+	// 	backgroundColor: "green",
+	// 	bottom: 50,
+	// 	borderRadius: 50,
+	// 	right: 20,
+	// 	alignSelf: "flex-end",
+	// },
 	check: {
 		position: "absolute",
-		height: "9%",
-		width: "20%",
-		backgroundColor: "green",
-		bottom: 50,
+		// height: "9%",
+		// width: "20%",
+		// backgroundColor: "green",
+		bottom: "50%",
 		borderRadius: 50,
-		right: 20,
-		alignSelf: "flex-end",
+		// right: "30%",
+		alignSelf: "center",
 	},
 	loginBtn: {
 		width: 200,

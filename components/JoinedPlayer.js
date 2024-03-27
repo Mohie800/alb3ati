@@ -1,9 +1,14 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 function JoinedPlayer(props) {
 	return (
 		<View style={styles.all}>
-			<View style={props.vic ? vic.container : styles.container}></View>
+			<View style={props.vic ? vic.container : styles.container}>
+				<Image
+					style={props.vic ? vic.container : styles.container}
+					source={require("../assets/profile.png")}
+				/>
+			</View>
 			<View style={styles.textCont}>
 				<Text style={props.vic ? vic.text : styles.text}>
 					{props.name}
@@ -15,7 +20,7 @@ function JoinedPlayer(props) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#E6E6E6",
+		// backgroundColor: "#E6E6E6",
 		borderRadius: 100,
 		width: 43,
 		height: 41,
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
 
 const vic = StyleSheet.create({
 	container: {
-		backgroundColor: "#E6E6E6",
+		// backgroundColor: "#E6E6E6",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -52,6 +57,7 @@ const vic = StyleSheet.create({
 	},
 	text: {
 		fontSize: 20,
+		color: "#e0e0e0",
 	},
 	all: {
 		margin: 10,

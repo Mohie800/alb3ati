@@ -2,12 +2,12 @@
 	"expo": {
 		"name": "AlBa3ati",
 		"slug": "alba3ati",
-		"version": "0.0.3",
+		"version": "0.1.0",
 		"orientation": "portrait",
-		"icon": "./assets/adapt.png",
+		"icon": "./assets/adapt1.png",
 		"userInterfaceStyle": "light",
 		"splash": {
-			"image": "./assets/splash1.png",
+			"image": "./assets/splash2.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#1f30a0"
 		},
@@ -20,7 +20,7 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/adapt.png",
+				"foregroundImage": "./assets/adapt1.png",
 				"backgroundColor": "#FFFFFF"
 			},
 			"package": "com.mohy.alba3ati"

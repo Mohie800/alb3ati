@@ -58,11 +58,11 @@ function ViewRole({ route, navigation }) {
 	};
 
 	const img = [
-		require("../../assets/adapt.png"),
-		require("../../assets/damazeen.png"),
-		require("../../assets/al3omda.png"),
-		require("../../assets/eye-sw.png"),
-		require("../../assets/jenzeer.jpg"),
+		require("../../assets/adapt1.png"),
+		require("../../assets/damazeen2.png"),
+		require("../../assets/al3omda2.png"),
+		require("../../assets/eye-sw2.png"),
+		require("../../assets/jenzeer2.png"),
 	];
 
 	const handleNext = async () => {
@@ -93,7 +93,7 @@ function ViewRole({ route, navigation }) {
 						دور اللاعب {playerName} :
 					</Text>
 					<Image source={image} style={Styles.rolePic} />
-					<Text>{RoleName}</Text>
+					<Text style={Styles.firstText}>{RoleName}</Text>
 				</View>
 				<View></View>
 				<View>
@@ -115,7 +115,7 @@ const Styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	rolePic: {
-		// backgroundColor: "#945151",
+		backgroundColor: "#e0e0e0",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -164,6 +164,7 @@ const Styles = StyleSheet.create({
 		fontSize: 30,
 		fontFamily: "a-massir-ballpoint",
 		marginTop: 30,
+		color: "#e0e0e0",
 	},
 });
 

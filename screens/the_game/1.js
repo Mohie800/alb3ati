@@ -72,7 +72,7 @@ const GamePage = ({ route, navigation }) => {
 						<JoinedPlayer name={item.playerName} />
 						{item.roleId == 1 && (
 							<Image
-								source={require("../../assets/adapt.png")}
+								source={require("../../assets/adapt1.png")}
 								style={Styles.check}
 							/>
 						)}
@@ -82,15 +82,6 @@ const GamePage = ({ route, navigation }) => {
 		}
 	};
 
-	const data = [
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-		{ inGame: true, playerName: "tsss", playerId: "78812973219" },
-	];
-
 	return (
 		<ScrollView>
 			<View style={Styles.container}>
@@ -98,10 +89,10 @@ const GamePage = ({ route, navigation }) => {
 					<View style={Styles.head}>
 						{/* <View style={Styles.rolePic}></View> */}
 						<Image
-							source={require("../../assets/adapt.png")}
+							source={require("../../assets/adapt1.png")}
 							style={Styles.rolePic}
 						/>
-						<Text>بعاتي</Text>
+						<Text style={Styles.text}>بعاتي</Text>
 					</View>
 					<View>
 						<View style={Styles.scrollArea}>
@@ -136,7 +127,7 @@ const Styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	rolePic: {
-		// backgroundColor: "#945151",
+		backgroundColor: "#f51a1a",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -214,6 +205,12 @@ const Styles = StyleSheet.create({
 		borderRadius: 50,
 		right: 20,
 		alignSelf: "flex-end",
+	},
+	text: {
+		fontSize: 20,
+		padding: 5,
+		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 });
 

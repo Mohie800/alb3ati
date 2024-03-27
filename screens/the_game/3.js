@@ -19,6 +19,7 @@ const GamePage = ({ route, navigation }) => {
 	const [target, setTarget] = useState(null);
 	const [player, setPlayer] = useState({});
 	const [loading, setloading] = useState(true);
+	const [disabled, setDisabled] = useState(true);
 
 	// useEffect(
 	// 	() =>
@@ -59,6 +60,11 @@ const GamePage = ({ route, navigation }) => {
 		);
 	};
 
+	const handleSelect = (playerId) => {
+		setTarget(playerId);
+		setDisabled(false);
+	};
+
 	useEffect(() => {
 		getGame();
 	}, []);
@@ -66,7 +72,7 @@ const GamePage = ({ route, navigation }) => {
 	const Item = ({ item }) => {
 		if (item.playerId != player.al3omdaProtect && item.inGame) {
 			return (
-				<TouchableOpacity onPress={() => setTarget(item.playerId)}>
+				<TouchableOpacity onPress={() => handleSelect(item.playerId)}>
 					<View
 						style={
 							item.playerId == target
@@ -88,7 +94,7 @@ const GamePage = ({ route, navigation }) => {
 				<View style={Styles.viewArea}>
 					<View style={Styles.head}>
 						<Image
-							source={require("../../assets/al3omda.png")}
+							source={require("../../assets/al3omda2.png")}
 							style={Styles.rolePic}
 						/>
 						<Text style={Styles.text}>العمدة</Text>
@@ -108,8 +114,13 @@ const GamePage = ({ route, navigation }) => {
 					</View>
 					<View>
 						<TouchableOpacity
-							style={Styles.loginBtn}
+							style={
+								disabled
+									? Styles.disabledloginBtn
+									: Styles.loginBtn
+							}
 							onPress={handleProtect}
+							disabled={disabled}
 						>
 							<Text style={Styles.loginText}>حماية</Text>
 						</TouchableOpacity>
@@ -126,7 +137,7 @@ const Styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	rolePic: {
-		// backgroundColor: "#945151",
+		backgroundColor: "#e0e0e0",
 		borderRadius: 100,
 		width: 200,
 		height: 200,
@@ -181,6 +192,16 @@ const Styles = StyleSheet.create({
 		backgroundColor: "#1f30a0",
 		bottom: 20,
 	},
+	disabledloginBtn: {
+		width: 200,
+		borderRadius: 25,
+		height: 50,
+		alignItems: "center",
+		justifyContent: "center",
+		marginTop: 40,
+		backgroundColor: "#6b6b6b",
+		bottom: 20,
+	},
 	loginText: {
 		color: "#fff",
 	},
@@ -192,6 +213,7 @@ const Styles = StyleSheet.create({
 		fontSize: 20,
 		padding: 5,
 		fontFamily: "a-massir-ballpoint",
+		color: "#e0e0e0",
 	},
 });
 
